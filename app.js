@@ -108,5 +108,5 @@ chatSend?.addEventListener('click', async () => {
     body: JSON.stringify({ messages: [{ role: 'user', content: msg }] })
   })
   const data = await res.json()
-  chatBox.value += `AI: ${data.choices[0].message.content}\n`
+  chatBox.value += `P-Tah: ${data.response}\n`
 })

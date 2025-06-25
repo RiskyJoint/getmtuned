@@ -260,6 +260,14 @@
             font-weight: 300;
             letter-spacing: 0.5px;
         }
+
+        .about {
+            max-width: 800px;
+            margin: 2rem auto 3rem;
+            text-align: center;
+            color: var(--silver);
+            line-height: 1.5;
+        }
         
         /* Premium Stats Bar */
         .stats-bar {
@@ -1124,11 +1132,18 @@
                 Get M-tuned's <span class="accent">Dyno</span>
             </h1>
             <p class="hero-subtitle">
-                Upload your datalog. Get laboratory-grade power analysis. 
+                Upload your datalog. Get laboratory-grade power analysis.
                 Experience the future of remote tuning.
             </p>
         </section>
-        
+
+        <!-- About Section -->
+        <section class="about">
+            <p>
+                M‑TUNED sells custom Subaru tunes by Mike, a safe tuner with years of experience and pride. The virtual dyno reads your datalog and estimates horsepower and torque so you can preview the gains from Mike's calibrations. Our assistant P‑Tah is here to answer Subaru questions and keep things positive.
+            </p>
+        </section>
+
         <!-- Stats Bar -->
         <div class="stats-bar">
             <div class="stat">
@@ -3367,9 +3382,9 @@
             });
             if(res.ok){
                 const data = await res.json();
-                chatBox.value += `AI: ${data.choices[0].message.content}\n`;
+                chatBox.value += `P-Tah: ${data.response}\n`;
             } else {
-                chatBox.value += 'AI: Unable to respond right now.\n';
+                chatBox.value += 'P-Tah: Unable to respond right now.\n';
             }
         });
     </script>

@@ -1,3 +1,4 @@
+import aiRules from "./ai-rules.md?raw";
 // Cloudflare Worker to power the M-TUNED portal
 // This worker demonstrates how you might handle user auth,
 // file uploads, order tracking and AI-based chat assistance.
@@ -110,8 +111,12 @@ async function handleChat(request, env) {
   }
   const body = await request.json()
   const messages = body.messages || []
-  // Include email for potential future customization
-  const answer = await env.AI.run('@cf/meta/llama-2-7b-chat-int8', { messages })
+
+  const systemPrompt = env.AI_RULES || aiRules
+
+  const aiMessages = [{ role: 'system', content: systemPrompt }, ...messages]
+
+  const answer = await env.AI.run('@cf/meta/llama-2-7b-chat-int8', { messages: aiMessages })
   return new Response(JSON.stringify(answer), { headers: { 'content-type': 'application/json' } })
 }
 
