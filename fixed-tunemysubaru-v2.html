@@ -2071,6 +2071,7 @@
                                 this.hideBaseline = e.target.checked;
                             } else if (id === 'dynojetMode') {
                                 this.dynojetMode = e.target.checked;
+                                console.log('Dynojet mode changed to:', this.dynojetMode);
                                 // Recalculate with new mode
                                 if (this.analysisData) {
                                     this.recalculateWithDynojetMode();
@@ -2092,6 +2093,7 @@
                 if (smoothingSelect) {
                     smoothingSelect.addEventListener('change', (e) => {
                         const level = parseInt(e.target.value);
+                        console.log('Smoothing changed to:', level);
                         if (this.analysisData) {
                             this.recalculateWithSmoothing(level);
                             this.forceChartRefresh();
@@ -2694,12 +2696,8 @@
             forceChartRefresh() {
                 const chartContainer = document.getElementById('dynoChart');
                 if (chartContainer) {
-                    const scrollPos = window.pageYOffset || document.documentElement.scrollTop;
-                    chartContainer.innerHTML = '';
-                    requestAnimationFrame(() => {
-                        this.createDynoChart();
-                        window.scrollTo(0, scrollPos);
-                    });
+                    // Force immediate redraw without requestAnimationFrame
+                    this.createDynoChart();
                 }
             }
 
