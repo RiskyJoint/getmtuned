@@ -2393,8 +2393,6 @@
                 
                 // Create chart
                 this.createDynoChart();
-                // Ensure redraw in some browsers
-                this.forceChartRefresh();
             }
             
             recalculateWithSmoothing(level) {
@@ -2458,8 +2456,6 @@
                     chartContainer.style.display = 'block';
 
                     this.createDynoChart();
-                    // Ensure redraw in some browsers
-                    this.forceChartRefresh();
                 }
             }
             
@@ -2527,8 +2523,6 @@
                 chartContainer.style.display = 'block';
 
                 this.createDynoChart();
-                // Ensure redraw in some browsers
-                this.forceChartRefresh();
             }
             
             analyzeForIssues() {
@@ -2702,18 +2696,11 @@
 
                 // Use requestAnimationFrame to ensure the clear happens first
                 requestAnimationFrame(() => {
-                    // Create premium SVG chart with timestamp to prevent caching
+                    // Create premium SVG chart and append timestamp to bust cache
                     const chartHTML = this.createPremiumChart();
-                    chartContainer.innerHTML = chartHTML;
+                    const timestamp = Date.now();
+                    chartContainer.innerHTML = `${chartHTML}<span style="display:none">${timestamp}</span>`;
                 });
-            }
-
-            forceChartRefresh() {
-                const chartContainer = document.getElementById('dynoChart');
-                if (chartContainer) {
-                    // Force immediate redraw without requestAnimationFrame
-                    this.createDynoChart();
-                }
             }
 
             createPremiumChart() {
