@@ -2074,7 +2074,9 @@
                                 // Recalculate with new mode
                                 if (this.analysisData) {
                                     this.recalculateWithDynojetMode();
+                                    this.createDynoChart();
                                 }
+                                return;
                             } else {
                                 this.chartOptions[id] = e.target.checked;
                             }
@@ -2092,6 +2094,7 @@
                         const level = parseInt(e.target.value);
                         if (this.analysisData) {
                             this.recalculateWithSmoothing(level);
+                            this.createDynoChart();
                         }
                     });
                 }
@@ -2687,7 +2690,7 @@
                 const chartHTML = this.createPremiumChart();
                 chartContainer.innerHTML = chartHTML;
             }
-            
+
             createPremiumChart() {
                 const data = this.analysisData.powerCurve;
                 if (!data || data.length === 0) return '';
