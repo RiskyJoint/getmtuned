@@ -2701,7 +2701,7 @@
             
             createDynoChart() {
                 const chartContainer = document.getElementById('dynoChart');
-                
+
                 if (!this.analysisData || !this.analysisData.powerCurve || this.analysisData.powerCurve.length === 0) {
                     chartContainer.innerHTML = `
                         <div style="text-align: center; padding: 4rem; color: var(--silver);">
@@ -2711,7 +2711,11 @@
                     `;
                     return;
                 }
-                
+
+                // Force the browser to clear and repaint
+                chartContainer.innerHTML = '';
+                chartContainer.offsetHeight; // Trigger reflow
+
                 // Create premium SVG chart
                 const chartHTML = this.createPremiumChart();
                 chartContainer.innerHTML = chartHTML;
