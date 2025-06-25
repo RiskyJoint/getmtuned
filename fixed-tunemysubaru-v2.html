@@ -2074,7 +2074,7 @@
                                 // Recalculate with new mode
                                 if (this.analysisData) {
                                     this.recalculateWithDynojetMode();
-                                    this.createDynoChart();
+                                    this.refreshDynoChart();
                                 }
                                 return;
                             } else {
@@ -2094,7 +2094,7 @@
                         const level = parseInt(e.target.value);
                         if (this.analysisData) {
                             this.recalculateWithSmoothing(level);
-                            this.createDynoChart();
+                            this.refreshDynoChart();
                         }
                     });
                 }
@@ -2395,7 +2395,7 @@
                 }
                 
                 // Create chart
-                this.createDynoChart();
+                this.refreshDynoChart();
             }
             
             recalculateWithSmoothing(level) {
@@ -2455,7 +2455,7 @@
                         `${currentPower} WHP / <span style="font-size: 1.8rem; opacity: 0.8;">${currentTorque} WTQ</span>`;
                     
                     // Redraw chart
-                    this.createDynoChart();
+                    this.refreshDynoChart();
                 }
             }
             
@@ -2517,7 +2517,7 @@
                 }
                 
                 // Redraw chart
-                this.createDynoChart();
+                this.refreshDynoChart();
             }
             
             analyzeForIssues() {
@@ -2690,7 +2690,12 @@
                 const chartHTML = this.createPremiumChart();
                 chartContainer.innerHTML = chartHTML;
             }
-            
+
+            refreshDynoChart() {
+                // Slight delay ensures DOM updates are flushed before redraw
+                setTimeout(() => this.createDynoChart(), 0);
+            }
+
             createPremiumChart() {
                 const data = this.analysisData.powerCurve;
                 if (!data || data.length === 0) return '';
