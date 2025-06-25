@@ -3360,7 +3360,7 @@
             if (!msg) return;
             chatBox.value += `You: ${msg}\n`;
             chatInput.value = '';
-            const res = await fetch('/api/chat', {
+            const res = await fetch('https://mtuned-api.yourname.workers.dev/api/chat', {
                 method: 'POST',
                 headers: { 'content-type': 'application/json' },
                 body: JSON.stringify({ messages: [{ role: 'user', content: msg }] })
