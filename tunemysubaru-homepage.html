@@ -599,7 +599,28 @@
             background: var(--primary);
             color: white;
         }
-        
+
+        /* Portal section */
+        .portal-section {
+            background: linear-gradient(135deg, rgba(245, 158, 11, 0.1) 0%, rgba(245, 158, 11, 0.05) 100%);
+            border: 1px solid rgba(245, 158, 11, 0.2);
+            border-radius: 1.5rem;
+            padding: 3rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+
+        .portal-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+
+        .portal-subtitle {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+
         /* Footer */
         footer {
             margin-top: 6rem;
@@ -622,6 +643,7 @@
                 <a href="#" class="nav-link">How It Works</a>
                 <a href="#" class="nav-link">Pricing</a>
                 <a href="#" class="nav-link">Contact</a>
+                <a href="portal.html" class="nav-link">Portal</a>
             </div>
         </div>
     </nav>
@@ -871,6 +893,11 @@
                     <button class="btn btn-primary">Get M-TUNED Now</button>
                     <button class="btn btn-secondary">Download Report</button>
                 </div>
+            </div>
+            <div class="portal-section">
+                <h3 class="portal-title">Customer Portal</h3>
+                <p class="portal-subtitle">Upload logs, monitor progress and grab your tune from our exclusive vault.</p>
+                <a href="portal.html" class="btn btn-primary">Open My Portal</a>
             </div>
         </section>
     </div>
