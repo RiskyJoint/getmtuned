@@ -99,11 +99,18 @@ async function handleOrderStatus(request, env) {
 }
 
 // Chat using Cloudflare Workers AI
+// Allows optional authentication so public users can ask questions
 async function handleChat(request, env) {
-  const auth = await authenticate(request, env)
-  if (!auth.ok) return auth.res
+  let email = 'guest'
+  const authHeader = request.headers.get('Authorization')
+  if (authHeader) {
+    const auth = await authenticate(request, env)
+    if (!auth.ok) return auth.res
+    email = auth.email
+  }
   const body = await request.json()
   const messages = body.messages || []
+  // Include email for potential future customization
   const answer = await env.AI.run('@cf/meta/llama-2-7b-chat-int8', { messages })
   return new Response(JSON.stringify(answer), { headers: { 'content-type': 'application/json' } })
 }
