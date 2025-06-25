@@ -2451,8 +2451,12 @@
                     powerCard.querySelector('.analysis-value').innerHTML =
                         `${currentPower} WHP / <span style="font-size: 1.8rem; opacity: 0.8;">${currentTorque} WTQ</span>`;
 
-                    // Refresh chart immediately
+                    // Force immediate chart redraw
                     const chartContainer = document.getElementById('dynoChart');
+                    chartContainer.style.display = 'none';
+                    chartContainer.offsetHeight;
+                    chartContainer.style.display = 'block';
+
                     this.createDynoChart();
                     // Ensure redraw in some browsers
                     this.forceChartRefresh();
@@ -2518,6 +2522,10 @@
                 
                 // Force immediate chart redraw
                 const chartContainer = document.getElementById('dynoChart');
+                chartContainer.style.display = 'none';
+                chartContainer.offsetHeight;
+                chartContainer.style.display = 'block';
+
                 this.createDynoChart();
                 // Ensure redraw in some browsers
                 this.forceChartRefresh();
@@ -2689,13 +2697,23 @@
                     return;
                 }
 
-                // Clear previous chart
+                // Clear and force complete redraw
                 chartContainer.innerHTML = '';
 
-                // Create premium SVG chart and append timestamp to bust cache
-                const chartHTML = this.createPremiumChart();
-                const timestamp = Date.now();
-                chartContainer.innerHTML = `${chartHTML}<span style="display:none">${timestamp}</span>`;
+                // Use requestAnimationFrame to ensure the clear happens first
+                requestAnimationFrame(() => {
+                    // Create premium SVG chart with timestamp to prevent caching
+                    const chartHTML = this.createPremiumChart();
+                    chartContainer.innerHTML = chartHTML;
+                });
+            }
+
+            forceChartRefresh() {
+                const chartContainer = document.getElementById('dynoChart');
+                if (chartContainer) {
+                    // Force immediate redraw without requestAnimationFrame
+                    this.createDynoChart();
+                }
             }
 
             createPremiumChart() {
