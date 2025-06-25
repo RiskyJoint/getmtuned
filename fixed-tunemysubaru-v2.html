@@ -2071,23 +2071,8 @@
                                 this.hideBaseline = e.target.checked;
                             } else if (id === 'dynojetMode') {
                                 this.dynojetMode = e.target.checked;
-                                // Recalculate with new mode
                                 if (this.analysisData) {
                                     this.recalculateWithDynojetMode();
-
-                                    // Force refresh by toggling power checkbox
-                                    const powerCheckbox = document.getElementById('showPower');
-                                    if (powerCheckbox) {
-                                        const wasChecked = powerCheckbox.checked;
-                                        powerCheckbox.checked = false;
-                                        this.chartOptions.showPower = false;
-
-                                        setTimeout(() => {
-                                            powerCheckbox.checked = wasChecked;
-                                            this.chartOptions.showPower = wasChecked;
-                                            this.createDynoChart();
-                                        }, 10);
-                                    }
                                 }
                                 return;
                             } else {
@@ -2107,20 +2092,6 @@
                         const level = parseInt(e.target.value);
                         if (this.analysisData) {
                             this.recalculateWithSmoothing(level);
-
-                            // Force refresh by toggling power checkbox
-                            const powerCheckbox = document.getElementById('showPower');
-                            if (powerCheckbox) {
-                                const wasChecked = powerCheckbox.checked;
-                                powerCheckbox.checked = false;
-                                this.chartOptions.showPower = false;
-
-                                setTimeout(() => {
-                                    powerCheckbox.checked = wasChecked;
-                                    this.chartOptions.showPower = wasChecked;
-                                    this.createDynoChart();
-                                }, 10);
-                            }
                         }
                     });
                 }
@@ -2426,17 +2397,17 @@
             
             recalculateWithSmoothing(level) {
                 if (!this.analysisData || !this.analysisData.rawPowerCurve) return;
-                
+
                 // Update smoothing level
                 this.config.smoothingLevel = level;
-                
+
                 // Apply smoothing to USER data
                 const calculator = new PowerCalculator({
                     ...this.config,
                     dynojetMode: this.dynojetMode
                 });
                 let smoothedCurve;
-                
+
                 if (level === 0) {
                     // No smoothing - use raw data
                     smoothedCurve = [...this.analysisData.rawPowerCurve];
@@ -2444,10 +2415,10 @@
                     // Apply smoothing to existing raw data
                     smoothedCurve = calculator.smoothResults(this.analysisData.rawPowerCurve);
                 }
-                
+
                 // Update displayed data
                 this.analysisData.powerCurve = smoothedCurve;
-                
+
                 // Apply smoothing to BASELINE data if it exists
                 if (this.baselineData && this.baselineData.rawPowerCurve) {
                     const baselineCalculator = new PowerCalculator({
@@ -2455,32 +2426,35 @@
                         dynojetMode: this.dynojetMode
                     });
                     let smoothedBaselineCurve;
-                    
+
                     if (level === 0) {
                         smoothedBaselineCurve = [...this.baselineData.rawPowerCurve];
                     } else {
                         smoothedBaselineCurve = baselineCalculator.smoothResults(this.baselineData.rawPowerCurve);
                     }
-                    
+
                     this.baselineData.powerCurve = smoothedBaselineCurve;
                 }
-                
+
                 if (smoothedCurve.length > 0) {
-                    // Update peak values
                     const currentPower = Math.round(Math.max(...smoothedCurve.map(p => p.power)));
                     const currentTorque = Math.round(Math.max(...smoothedCurve.map(p => p.torque)));
-                    
-                    // Update UI
+
                     document.getElementById('currentPower').textContent = currentPower;
-                    document.getElementById('powerGainValue').textContent = 
+                    document.getElementById('powerGainValue').textContent =
                         Math.max(0, this.calculatePotentialPower() - currentPower);
-                    
+
                     const powerCard = document.querySelector('.analysis-card:first-child');
                     const dynoType = this.dynojetMode ? 'Dynojet' : 'Mustang';
-                    powerCard.querySelector('.analysis-value').innerHTML = 
+                    powerCard.querySelector('.analysis-value').innerHTML =
                         `${currentPower} WHP / <span style="font-size: 1.8rem; opacity: 0.8;">${currentTorque} WTQ</span>`;
-                    
-                    // Redraw chart
+
+                    // Force immediate chart redraw
+                    const chartContainer = document.getElementById('dynoChart');
+                    chartContainer.style.display = 'none';
+                    chartContainer.offsetHeight;
+                    chartContainer.style.display = 'block';
+
                     this.createDynoChart();
                 }
             }
@@ -2542,7 +2516,12 @@
                     }
                 }
                 
-                // Redraw chart
+                // Force immediate chart redraw
+                const chartContainer = document.getElementById('dynoChart');
+                chartContainer.style.display = 'none';
+                chartContainer.offsetHeight;
+                chartContainer.style.display = 'block';
+
                 this.createDynoChart();
             }
             
