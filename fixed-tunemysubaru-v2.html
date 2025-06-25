@@ -2691,13 +2691,15 @@
                     return;
                 }
 
-                // Force the browser to clear and repaint
+                // Clear and force complete redraw
                 chartContainer.innerHTML = '';
-                chartContainer.offsetHeight; // Trigger reflow
 
-                // Create premium SVG chart
-                const chartHTML = this.createPremiumChart();
-                chartContainer.innerHTML = chartHTML;
+                // Use requestAnimationFrame to ensure the clear happens first
+                requestAnimationFrame(() => {
+                    // Create premium SVG chart with timestamp to prevent caching
+                    const chartHTML = this.createPremiumChart();
+                    chartContainer.innerHTML = chartHTML;
+                });
             }
 
             forceChartRefresh() {
