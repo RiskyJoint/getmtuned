@@ -2393,6 +2393,8 @@
                 
                 // Create chart
                 this.createDynoChart();
+                // Ensure redraw in some browsers
+                this.forceChartRefresh();
             }
             
             recalculateWithSmoothing(level) {
@@ -2456,6 +2458,8 @@
                     chartContainer.style.display = 'block';
 
                     this.createDynoChart();
+                    // Ensure redraw in some browsers
+                    this.forceChartRefresh();
                 }
             }
             
@@ -2523,6 +2527,8 @@
                 chartContainer.style.display = 'block';
 
                 this.createDynoChart();
+                // Ensure redraw in some browsers
+                this.forceChartRefresh();
             }
             
             analyzeForIssues() {
