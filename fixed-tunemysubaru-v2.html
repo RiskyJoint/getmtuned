@@ -2074,14 +2074,14 @@
                                 // Recalculate with new mode
                                 if (this.analysisData) {
                                     this.recalculateWithDynojetMode();
-                                    this.createDynoChart();
+                                    this.refreshDynoChart();
                                 }
                                 return;
                             } else {
                                 this.chartOptions[id] = e.target.checked;
                             }
                             if (this.analysisData) {
-                                this.createDynoChart();
+                                this.refreshDynoChart();
                             }
                         });
                     }
@@ -2094,7 +2094,7 @@
                         const level = parseInt(e.target.value);
                         if (this.analysisData) {
                             this.recalculateWithSmoothing(level);
-                            this.createDynoChart();
+                            this.refreshDynoChart();
                         }
                     });
                 }
@@ -2455,7 +2455,7 @@
                         `${currentPower} WHP / <span style="font-size: 1.8rem; opacity: 0.8;">${currentTorque} WTQ</span>`;
                     
                     // Redraw chart
-                    this.createDynoChart();
+                    this.refreshDynoChart();
                 }
             }
             
@@ -2517,7 +2517,7 @@
                 }
                 
                 // Redraw chart
-                this.createDynoChart();
+                this.refreshDynoChart();
             }
             
             analyzeForIssues() {
@@ -2689,6 +2689,10 @@
                 // Create premium SVG chart
                 const chartHTML = this.createPremiumChart();
                 chartContainer.innerHTML = chartHTML;
+            }
+
+            refreshDynoChart() {
+                requestAnimationFrame(() => this.createDynoChart());
             }
 
             createPremiumChart() {
