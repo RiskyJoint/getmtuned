@@ -2063,18 +2063,12 @@
             
             initializeChartControls() {
                 // Chart checkboxes
-                ['showPower', 'showTorque', 'showBoost', 'showAFR', 'showSlip', 'hideBaseline', 'dynojetMode'].forEach(id => {
+                ['showPower', 'showTorque', 'showBoost', 'showAFR', 'showSlip', 'hideBaseline'].forEach(id => {
                     const checkbox = document.getElementById(id);
                     if (checkbox) {
                         checkbox.addEventListener('change', (e) => {
                             if (id === 'hideBaseline') {
                                 this.hideBaseline = e.target.checked;
-                            } else if (id === 'dynojetMode') {
-                                this.dynojetMode = e.target.checked;
-                                if (this.analysisData) {
-                                    this.recalculateWithDynojetMode();
-                                }
-                                return;
                             } else {
                                 this.chartOptions[id] = e.target.checked;
                             }
@@ -2084,6 +2078,17 @@
                         });
                     }
                 });
+
+                // Separate listener for Dynojet Mode
+                const dynojetModeCheckbox = document.getElementById('dynojetMode');
+                if (dynojetModeCheckbox) {
+                    dynojetModeCheckbox.addEventListener('change', (e) => {
+                        this.dynojetMode = e.target.checked;
+                        if (this.analysisData) {
+                            this.recalculateWithDynojetMode();
+                        }
+                    });
+                }
                 
                 // Smoothing control
                 const smoothingSelect = document.getElementById('smoothingLevel');
