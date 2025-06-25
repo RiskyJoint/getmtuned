@@ -2074,7 +2074,7 @@
                                 // Recalculate with new mode
                                 if (this.analysisData) {
                                     this.recalculateWithDynojetMode();
-                                    this.createDynoChart();
+                                    this.forceChartRefresh();
                                 }
                                 return;
                             } else {
@@ -2094,7 +2094,7 @@
                         const level = parseInt(e.target.value);
                         if (this.analysisData) {
                             this.recalculateWithSmoothing(level);
-                            this.createDynoChart();
+                            this.forceChartRefresh();
                         }
                     });
                 }
@@ -2689,6 +2689,14 @@
                 // Create premium SVG chart
                 const chartHTML = this.createPremiumChart();
                 chartContainer.innerHTML = chartHTML;
+            }
+
+            forceChartRefresh() {
+                const previous = this.chartOptions.showPower;
+                this.chartOptions.showPower = !previous;
+                this.createDynoChart();
+                this.chartOptions.showPower = previous;
+                this.createDynoChart();
             }
 
             createPremiumChart() {
