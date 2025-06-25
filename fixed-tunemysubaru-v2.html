@@ -1900,7 +1900,8 @@
                 const sorted = [...results].sort((a, b) => a.rpm - b.rpm);
                 
                 // Determine bin size based on smoothing level
-                const binSizes = [0, 50, 40, 30, 25, 20];
+                // More aggressive binning for visible smoothing
+                const binSizes = [0, 50, 40, 30, 20, 15];
                 const binSize = binSizes[Math.min(this.smoothingLevel, 5)];
                 const bins = {};
                 
@@ -1930,7 +1931,8 @@
                 });
                 
                 // Apply additional smoothing based on level
-                const windowSizes = [0, 1, 2, 3, 4, 5];
+                // Larger window radius provides stronger smoothing effect
+                const windowSizes = [0, 2, 4, 6, 8, 10];
                 const windowRadius = windowSizes[Math.min(this.smoothingLevel, 5)];
                 
                 const smoothed = [];
@@ -2268,7 +2270,10 @@
             
             calculateResults() {
                 // Create Power Calculator instance for user data
-                const calculator = new PowerCalculator(this.config);
+                const calculator = new PowerCalculator({
+                    ...this.config,
+                    dynojetMode: this.dynojetMode
+                });
                 
                 // Find pulls in user data
                 const pulls = calculator.findPulls(this.userLog.data);
@@ -2317,7 +2322,10 @@
                 // Process baseline data if available
                 if (this.baselineLog && this.baselineLog.data.length > 0) {
                     console.log('Processing baseline data...');
-                    const baselineCalculator = new PowerCalculator(this.config);
+                    const baselineCalculator = new PowerCalculator({
+                        ...this.config,
+                        dynojetMode: this.dynojetMode
+                    });
                     const baselinePulls = baselineCalculator.findPulls(this.baselineLog.data);
                     
                     if (baselinePulls.length > 0) {
@@ -2394,7 +2402,10 @@
                 this.config.smoothingLevel = level;
                 
                 // Apply smoothing to USER data
-                const calculator = new PowerCalculator(this.config);
+                const calculator = new PowerCalculator({
+                    ...this.config,
+                    dynojetMode: this.dynojetMode
+                });
                 let smoothedCurve;
                 
                 if (level === 0) {
@@ -2410,7 +2421,10 @@
                 
                 // Apply smoothing to BASELINE data if it exists
                 if (this.baselineData && this.baselineData.rawPowerCurve) {
-                    const baselineCalculator = new PowerCalculator(this.config);
+                    const baselineCalculator = new PowerCalculator({
+                        ...this.config,
+                        dynojetMode: this.dynojetMode
+                    });
                     let smoothedBaselineCurve;
                     
                     if (level === 0) {
@@ -2448,7 +2462,10 @@
                 
                 // Recalculate USER data
                 if (this.analysisData && this.analysisData.pull) {
-                    const calculator = new PowerCalculator(this.config);
+                    const calculator = new PowerCalculator({
+                        ...this.config,
+                        dynojetMode: this.dynojetMode
+                    });
                     const rawPowerCurve = calculator.calculatePowerAndTorque(this.analysisData.pull);
                     
                     if (rawPowerCurve && rawPowerCurve.length > 0) {
@@ -2482,7 +2499,10 @@
                 
                 // Recalculate BASELINE data
                 if (this.baselineData && this.baselineData.pull) {
-                    const baselineCalculator = new PowerCalculator(this.config);
+                    const baselineCalculator = new PowerCalculator({
+                        ...this.config,
+                        dynojetMode: this.dynojetMode
+                    });
                     const rawBaselineCurve = baselineCalculator.calculatePowerAndTorque(this.baselineData.pull);
                     
                     if (rawBaselineCurve && rawBaselineCurve.length > 0) {
