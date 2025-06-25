@@ -76,3 +76,6 @@ This code is a starting point and omits robust security and error handling. Befo
 - Validation for uploaded file types and sizes
 - Admin tooling to update order status and manage users
 
+The AI assistant uses `ai-rules.md` for its system prompt. Edit this file or
+set the `AI_RULES` environment variable to customize responses.
+
