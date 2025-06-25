@@ -622,6 +622,7 @@
                 <a href="#" class="nav-link">How It Works</a>
                 <a href="#" class="nav-link">Pricing</a>
                 <a href="#" class="nav-link">Contact</a>
+                <a href="portal.html" class="nav-link">Customer Portal</a>
             </div>
         </div>
     </nav>
@@ -896,7 +897,7 @@
                 <h3 class="cta-title">Ready to Unlock Your Power?</h3>
                 <p class="cta-subtitle">Get your custom M-TUNED calibration and feel the difference</p>
                 <div class="cta-buttons">
-                    <button class="btn btn-primary">Get M-TUNED Now</button>
+                    <a href="portal.html" class="btn btn-primary">Get M-TUNED Now</a>
                     <button class="btn btn-secondary" id="downloadReportBtn">Download Report</button>
                 </div>
             </div>
@@ -1192,9 +1193,11 @@
                 const Crr = 0.013; // Rolling resistance coefficient
                 const airDensity = 0.00238; // slugs/ft³ at sea level
                 
-                // Calibration factor to match Virtual Dyno output
-                // VD is VERY conservative - a real 310hp car shows as ~190hp
-                const VD_CALIBRATION = 0.55; // Tuned to match VD's output
+                // Calibration factor - 1.0 gives wheel power closely matching
+                // typical dyno results. The previous 0.55 value mimicked the
+                // very conservative Virtual Dyno numbers and drastically
+                // underreported power.
+                const VD_CALIBRATION = 1.0;
                 
                 // Get gear info
                 const gear = this.selectedGear;
@@ -1996,22 +1999,25 @@
                 const leftAxisSeries = series.filter(s => s.axis === 'left');
                 const rightAxisSeries = series.filter(s => s.axis === 'right');
                 const right2AxisSeries = series.filter(s => s.axis === 'right2');
-                
+
                 // Normalize scales for left axis
                 let leftMax = 0;
                 if (leftAxisSeries.length > 0) {
                     leftMax = Math.max(...leftAxisSeries.map(s => Math.max(...s.data.map(d => d.value))));
                     leftMax = Math.ceil(leftMax / 50) * 50; // Round up to nearest 50
                 }
+                const leftStep = leftMax / 5 || 50;
+                const leftTicks = [];
+                for (let i = 0; i <= 5; i++) leftTicks.push(i * leftStep);
                 
                 return `
                     <svg viewBox="0 0 1000 500" style="width: 100%; height: 100%;">
                         <!-- Grid -->
                         <g stroke="rgba(255,255,255,0.1)" stroke-width="1">
-                            ${[0, 100, 200, 300, 400, 500].map(y => 
-                                `<line x1="80" y1="${450 - (y / 500 * 400)}" x2="920" y2="${450 - (y / 500 * 400)}" />`
+                            ${leftTicks.map(y =>
+                                `<line x1="80" y1="${450 - (y / leftMax * 400)}" x2="920" y2="${450 - (y / leftMax * 400)}" />`
                             ).join('')}
-                            ${rpmRange.map((rpm, i) => 
+                            ${rpmRange.map((rpm, i) =>
                                 `<line x1="${80 + i * 76}" y1="50" x2="${80 + i * 76}" y2="450" />`
                             ).join('')}
                         </g>
@@ -2026,8 +2032,8 @@
                         <!-- Left Y-axis labels (Power/Torque) -->
                         ${leftAxisSeries.length > 0 ? `
                             <g fill="#94a3b8" font-size="12">
-                                ${[0, 100, 200, 300, 400, 500].map(y => 
-                                    `<text x="60" y="${455 - (y / 500 * 400)}" text-anchor="end">${y}</text>`
+                                ${leftTicks.map(y =>
+                                    `<text x="60" y="${455 - (y / leftMax * 400)}" text-anchor="end">${Math.round(y)}</text>`
                                 ).join('')}
                                 <text x="25" y="250" text-anchor="middle" font-size="14" transform="rotate(-90 25 250)">HP / TQ</text>
                             </g>
@@ -2054,7 +2060,7 @@
                         <!-- Data curves -->
                         <g fill="none" stroke-width="3">
                             ${series.map(s => {
-                                const points = this.dataToOverlayPoints(s.data, rpmRange, s);
+                                const points = this.dataToOverlayPoints(s.data, rpmRange, s, leftMax);
                                 return `<polyline stroke="${s.color}" points="${points}" />`;
                             }).join('')}
                         </g>
@@ -2082,7 +2088,7 @@
                 `;
             }
             
-            dataToOverlayPoints(data, rpmRange, series) {
+            dataToOverlayPoints(data, rpmRange, series, leftMax) {
                 const points = [];
                 
                 rpmRange.forEach((rpm, i) => {
@@ -2103,7 +2109,7 @@
                     // Scale based on axis
                     let y;
                     if (series.axis === 'left') {
-                        y = 450 - (value / 500 * 400);
+                        y = leftMax ? 450 - (value / leftMax * 400) : 450;
                     } else if (series.axis === 'right') {
                         y = 450 - (value / 30 * 400);
                     } else if (series.axis === 'right2') {
@@ -2190,9 +2196,11 @@
                     ctx.fillText(rpm.toString(), x, chartY + chartHeight + 20);
                 }
                 
-                // Horizontal grid (Power/Torque)
-                const maxPower = 500;
-                const maxTorque = 500;
+                // Horizontal grid (Power/Torque) - scale based on peak values
+                const peakHP = Math.max(...data.map(p => p.power));
+                const peakTQ = Math.max(...data.map(p => p.torque));
+                const maxPower = Math.ceil(Math.max(peakHP, peakTQ) / 50) * 50;
+                const maxTorque = maxPower;
                 
                 for (let i = 0; i <= 10; i++) {
                     const y = chartY + chartHeight - (chartHeight * i / 10);
