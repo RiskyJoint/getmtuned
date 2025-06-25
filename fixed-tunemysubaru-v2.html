@@ -2071,11 +2071,23 @@
                                 this.hideBaseline = e.target.checked;
                             } else if (id === 'dynojetMode') {
                                 this.dynojetMode = e.target.checked;
-                                console.log('Dynojet mode changed to:', this.dynojetMode);
                                 // Recalculate with new mode
                                 if (this.analysisData) {
                                     this.recalculateWithDynojetMode();
-                                    this.forceChartRefresh();
+
+                                    // Force refresh by toggling power checkbox
+                                    const powerCheckbox = document.getElementById('showPower');
+                                    if (powerCheckbox) {
+                                        const wasChecked = powerCheckbox.checked;
+                                        powerCheckbox.checked = false;
+                                        this.chartOptions.showPower = false;
+
+                                        setTimeout(() => {
+                                            powerCheckbox.checked = wasChecked;
+                                            this.chartOptions.showPower = wasChecked;
+                                            this.createDynoChart();
+                                        }, 10);
+                                    }
                                 }
                                 return;
                             } else {
@@ -2093,10 +2105,22 @@
                 if (smoothingSelect) {
                     smoothingSelect.addEventListener('change', (e) => {
                         const level = parseInt(e.target.value);
-                        console.log('Smoothing changed to:', level);
                         if (this.analysisData) {
                             this.recalculateWithSmoothing(level);
-                            this.forceChartRefresh();
+
+                            // Force refresh by toggling power checkbox
+                            const powerCheckbox = document.getElementById('showPower');
+                            if (powerCheckbox) {
+                                const wasChecked = powerCheckbox.checked;
+                                powerCheckbox.checked = false;
+                                this.chartOptions.showPower = false;
+
+                                setTimeout(() => {
+                                    powerCheckbox.checked = wasChecked;
+                                    this.chartOptions.showPower = wasChecked;
+                                    this.createDynoChart();
+                                }, 10);
+                            }
                         }
                     });
                 }
