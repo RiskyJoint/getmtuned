@@ -1,0 +1,2391 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TuneMySubaru | Professional Dyno Analysis by M-TUNED</title>
+    
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=JetBrains+Mono:wght@400;700&display=swap');
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        :root {
+            --primary: #6366f1;
+            --primary-dark: #4f46e5;
+            --secondary: #f59e0b;
+            --success: #10b981;
+            --danger: #ef4444;
+            --dark: #0f172a;
+            --darker: #020617;
+            --light: #1e293b;
+            --lighter: #334155;
+            --text: #e2e8f0;
+            --text-muted: #94a3b8;
+        }
+        
+        body {
+            font-family: 'Inter', sans-serif;
+            background: var(--darker);
+            color: var(--text);
+            line-height: 1.6;
+            overflow-x: hidden;
+        }
+        
+        /* Premium gradient background */
+        .bg-gradient {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: linear-gradient(135deg, var(--darker) 0%, var(--dark) 100%);
+            z-index: -3;
+        }
+        
+        .bg-pattern {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            opacity: 0.03;
+            background-image: radial-gradient(circle at 1px 1px, var(--primary) 1px, transparent 1px);
+            background-size: 40px 40px;
+            z-index: -2;
+        }
+        
+        /* Navigation */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: rgba(15, 23, 42, 0.8);
+            backdrop-filter: blur(10px);
+            border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+            z-index: 1000;
+            padding: 1rem 0;
+        }
+        
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 1.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            text-decoration: none;
+        }
+        
+        .nav-links {
+            display: flex;
+            gap: 2rem;
+            align-items: center;
+        }
+        
+        .nav-link {
+            color: var(--text-muted);
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s ease;
+        }
+        
+        .nav-link:hover {
+            color: var(--primary);
+        }
+        
+        /* Main container */
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 0 2rem;
+            padding-top: 100px;
+        }
+        
+        /* Hero section */
+        .hero {
+            padding: 4rem 0;
+            text-align: center;
+        }
+        
+        .hero-badge {
+            display: inline-flex;
+            align-items: center;
+            gap: 0.5rem;
+            background: rgba(16, 185, 129, 0.1);
+            border: 1px solid rgba(16, 185, 129, 0.2);
+            padding: 0.5rem 1rem;
+            border-radius: 9999px;
+            font-size: 0.875rem;
+            color: var(--success);
+            margin-bottom: 2rem;
+        }
+        
+        .hero-title {
+            font-size: clamp(2.5rem, 5vw, 4rem);
+            font-weight: 800;
+            line-height: 1.1;
+            margin-bottom: 1.5rem;
+            background: linear-gradient(135deg, var(--primary) 0%, var(--secondary) 100%);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+        
+        .hero-subtitle {
+            font-size: 1.25rem;
+            color: var(--text-muted);
+            max-width: 600px;
+            margin: 0 auto 3rem;
+        }
+        
+        /* Stats bar */
+        .stats-bar {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: 2rem;
+            padding: 2rem;
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+            margin-bottom: 3rem;
+        }
+        
+        .stat {
+            text-align: center;
+        }
+        
+        .stat-value {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--primary);
+            margin-bottom: 0.5rem;
+        }
+        
+        .stat-label {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        /* Upload section */
+        .upload-section {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 1.5rem;
+            padding: 3rem;
+            margin-bottom: 3rem;
+        }
+        
+        .section-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .section-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .section-subtitle {
+            color: var(--text-muted);
+        }
+        
+        /* Upload area */
+        .upload-area {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.05) 0%, rgba(99, 102, 241, 0.02) 100%);
+            border: 2px dashed rgba(99, 102, 241, 0.3);
+            border-radius: 1rem;
+            padding: 4rem 2rem;
+            text-align: center;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .upload-area:hover {
+            border-color: var(--primary);
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(99, 102, 241, 0.05) 100%);
+        }
+        
+        .upload-area.dragover {
+            border-color: var(--primary);
+            background: rgba(99, 102, 241, 0.1);
+            transform: scale(1.02);
+        }
+        
+        .upload-icon {
+            width: 80px;
+            height: 80px;
+            margin: 0 auto 1.5rem;
+            background: var(--primary);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+        }
+        
+        .upload-text {
+            font-size: 1.25rem;
+            font-weight: 600;
+            margin-bottom: 0.5rem;
+        }
+        
+        .upload-subtext {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+        
+        .file-info {
+            margin-top: 1rem;
+            padding: 1rem;
+            background: rgba(16, 185, 129, 0.1);
+            border-radius: 0.5rem;
+            color: var(--success);
+            font-weight: 500;
+        }
+        
+        input[type="file"] {
+            display: none;
+        }
+        
+        /* Configuration form */
+        .config-section {
+            margin-top: 3rem;
+            display: none;
+        }
+        
+        .config-section.show {
+            display: block;
+        }
+        
+        .form-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 2rem;
+        }
+        
+        .form-group {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 0.75rem;
+            padding: 1.5rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-group:hover {
+            border-color: rgba(99, 102, 241, 0.3);
+            background: rgba(255, 255, 255, 0.03);
+        }
+        
+        .form-label {
+            display: block;
+            font-size: 0.875rem;
+            font-weight: 600;
+            color: var(--secondary);
+            margin-bottom: 0.75rem;
+            text-transform: uppercase;
+            letter-spacing: 0.05em;
+        }
+        
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--dark);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+            color: var(--text);
+            font-size: 1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.1);
+        }
+        
+        /* Analyze button */
+        .analyze-section {
+            text-align: center;
+            margin-top: 2rem;
+        }
+        
+        .btn {
+            padding: 1rem 3rem;
+            font-size: 1.125rem;
+            font-weight: 600;
+            border: none;
+            border-radius: 0.75rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .btn-primary {
+            background: linear-gradient(135deg, var(--primary) 0%, var(--primary-dark) 100%);
+            color: white;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
+        }
+        
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 10px 15px -3px rgba(0, 0, 0, 0.1), 0 4px 6px -2px rgba(0, 0, 0, 0.05);
+        }
+        
+        .btn:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+            transform: none !important;
+        }
+        
+        /* Loading state */
+        .loading-overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background: rgba(0, 0, 0, 0.8);
+            display: none;
+            align-items: center;
+            justify-content: center;
+            z-index: 9999;
+        }
+        
+        .loading-content {
+            text-align: center;
+        }
+        
+        .spinner {
+            width: 60px;
+            height: 60px;
+            border: 3px solid rgba(255, 255, 255, 0.1);
+            border-top-color: var(--primary);
+            border-radius: 50%;
+            animation: spin 1s linear infinite;
+            margin: 0 auto 2rem;
+        }
+        
+        @keyframes spin {
+            to { transform: rotate(360deg); }
+        }
+        
+        .loading-text {
+            font-size: 1.25rem;
+            color: var(--text);
+        }
+        
+        .loading-steps {
+            margin-top: 2rem;
+            text-align: left;
+            display: inline-block;
+        }
+        
+        .loading-step {
+            display: flex;
+            align-items: center;
+            gap: 1rem;
+            margin: 0.5rem 0;
+            color: var(--text-muted);
+            font-size: 0.875rem;
+        }
+        
+        .loading-step.active {
+            color: var(--primary);
+        }
+        
+        .loading-step.complete {
+            color: var(--success);
+        }
+        
+        /* Results section */
+        .results-section {
+            display: none;
+            margin-top: 3rem;
+        }
+        
+        .results-header {
+            text-align: center;
+            margin-bottom: 3rem;
+        }
+        
+        .power-gain {
+            font-size: 3rem;
+            font-weight: 800;
+            color: var(--success);
+            margin: 1rem 0;
+        }
+        
+        /* Dyno chart container */
+        .dyno-container {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+            padding: 2rem;
+            margin-bottom: 3rem;
+        }
+        
+        .chart-controls {
+            display: flex;
+            gap: 1rem;
+            margin-bottom: 2rem;
+            flex-wrap: wrap;
+        }
+        
+        .chart-btn {
+            padding: 0.5rem 1rem;
+            background: var(--light);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            border-radius: 0.5rem;
+            color: var(--text);
+            font-size: 0.875rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+        
+        .chart-btn:hover {
+            background: var(--lighter);
+            border-color: var(--primary);
+        }
+        
+        .chart-btn.active {
+            background: var(--primary);
+            color: white;
+            border-color: var(--primary);
+        }
+        
+        #dynoChart {
+            width: 100%;
+            height: 500px;
+        }
+        
+        /* Analysis cards */
+        .analysis-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 1.5rem;
+            margin-bottom: 3rem;
+        }
+        
+        .analysis-card {
+            background: rgba(255, 255, 255, 0.02);
+            border: 1px solid rgba(255, 255, 255, 0.05);
+            border-radius: 1rem;
+            padding: 2rem;
+            position: relative;
+            overflow: hidden;
+        }
+        
+        .analysis-card::before {
+            content: '';
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 4px;
+            height: 100%;
+        }
+        
+        .analysis-card.good::before {
+            background: var(--success);
+        }
+        
+        .analysis-card.warning::before {
+            background: var(--secondary);
+        }
+        
+        .analysis-card.danger::before {
+            background: var(--danger);
+        }
+        
+        .analysis-title {
+            font-size: 1.125rem;
+            font-weight: 600;
+            margin-bottom: 1rem;
+            display: flex;
+            align-items: center;
+            gap: 0.5rem;
+        }
+        
+        .analysis-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 0.875rem;
+            font-weight: bold;
+        }
+        
+        .analysis-card.good .analysis-icon {
+            background: rgba(16, 185, 129, 0.2);
+            color: var(--success);
+        }
+        
+        .analysis-card.warning .analysis-icon {
+            background: rgba(245, 158, 11, 0.2);
+            color: var(--secondary);
+        }
+        
+        .analysis-card.danger .analysis-icon {
+            background: rgba(239, 68, 68, 0.2);
+            color: var(--danger);
+        }
+        
+        .analysis-value {
+            font-size: 2rem;
+            font-weight: 700;
+            margin: 0.5rem 0;
+        }
+        
+        .analysis-description {
+            color: var(--text-muted);
+            font-size: 0.875rem;
+            line-height: 1.5;
+        }
+        
+        /* CTA section */
+        .cta-section {
+            background: linear-gradient(135deg, rgba(99, 102, 241, 0.1) 0%, rgba(99, 102, 241, 0.05) 100%);
+            border: 1px solid rgba(99, 102, 241, 0.2);
+            border-radius: 1.5rem;
+            padding: 3rem;
+            text-align: center;
+            margin-top: 3rem;
+        }
+        
+        .cta-title {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 1rem;
+        }
+        
+        .cta-subtitle {
+            color: var(--text-muted);
+            margin-bottom: 2rem;
+        }
+        
+        .cta-buttons {
+            display: flex;
+            gap: 1rem;
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+        
+        .btn-secondary {
+            background: transparent;
+            color: var(--primary);
+            border: 2px solid var(--primary);
+        }
+        
+        .btn-secondary:hover {
+            background: var(--primary);
+            color: white;
+        }
+        
+        /* Footer */
+        footer {
+            margin-top: 6rem;
+            padding: 3rem 0;
+            border-top: 1px solid rgba(255, 255, 255, 0.05);
+            text-align: center;
+            color: var(--text-muted);
+        }
+    </style>
+</head>
+<body>
+    <div class="bg-gradient"></div>
+    <div class="bg-pattern"></div>
+    
+    <!-- Navigation -->
+    <nav>
+        <div class="nav-container">
+            <a href="#" class="logo">TUNEMYSUBARU</a>
+            <div class="nav-links">
+                <a href="#" class="nav-link">How It Works</a>
+                <a href="#" class="nav-link">Pricing</a>
+                <a href="#" class="nav-link">Contact</a>
+            </div>
+        </div>
+    </nav>
+    
+    <!-- Main Content -->
+    <div class="container">
+        <!-- Hero Section -->
+        <section class="hero">
+            <div class="hero-badge">
+                <span>✓</span> Trusted by 5,000+ Subaru Owners
+            </div>
+            <h1 class="hero-title">Professional Dyno Analysis in Seconds</h1>
+            <p class="hero-subtitle">
+                Upload your datalog and instantly see how your tune compares to our proven M-TUNED calibrations. 
+                No guesswork, just data.
+            </p>
+        </section>
+        
+        <!-- Stats Bar -->
+        <div class="stats-bar">
+            <div class="stat">
+                <div class="stat-value">47</div>
+                <div class="stat-label">Average HP Gain</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">15K+</div>
+                <div class="stat-label">Logs Analyzed</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">100%</div>
+                <div class="stat-label">Safe Tunes</div>
+            </div>
+            <div class="stat">
+                <div class="stat-value">< 30s</div>
+                <div class="stat-label">Analysis Time</div>
+            </div>
+        </div>
+        
+        <!-- Upload Section -->
+        <section class="upload-section">
+            <div class="section-header">
+                <h2 class="section-title">Upload Your Datalog</h2>
+                <p class="section-subtitle">Supports all Cobb Accessport CSV formats</p>
+            </div>
+            
+            <div class="upload-area" id="uploadArea">
+                <div class="upload-icon">📊</div>
+                <div class="upload-text">Drop your CSV file here</div>
+                <div class="upload-subtext">or click to browse</div>
+                <input type="file" id="fileInput" accept=".csv">
+            </div>
+            
+            <!-- Configuration Form -->
+            <div class="config-section" id="configSection">
+                <div class="form-grid" style="grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));">
+                    <div class="form-group">
+                        <label class="form-label">Vehicle</label>
+                        <select class="form-input" id="vehicle">
+                            <option value="">Select your vehicle</option>
+                            <option value="2022-wrx">2022+ WRX (FA24)</option>
+                            <option value="2015-2021-wrx">2015-2021 WRX (FA20)</option>
+                            <option value="2015-2021-sti">2015-2021 STI (EJ25)</option>
+                            <option value="2008-2014-wrx">2008-2014 WRX (EJ25)</option>
+                            <option value="2004-2007-sti">2004-2007 STI (EJ25)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Current Modifications</label>
+                        <select class="form-input" id="modLevel">
+                            <option value="">Select mod level</option>
+                            <option value="stock">Stock</option>
+                            <option value="stage1">Stage 1 (Intake/Exhaust)</option>
+                            <option value="stage2">Stage 2 (Downpipe + Tune)</option>
+                            <option value="stage2plus">Stage 2+ (EBCS/TMIC)</option>
+                            <option value="flex">Flex Fuel</option>
+                            <option value="bigturbo">Big Turbo</option>
+                            <option value="built">Built Motor</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Fuel Type</label>
+                        <select class="form-input" id="fuel">
+                            <option value="">Select fuel</option>
+                            <option value="91">91 Octane</option>
+                            <option value="93">93 Octane</option>
+                            <option value="e30">E30</option>
+                            <option value="e50">E50</option>
+                            <option value="e85">E85</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Risk Tolerance</label>
+                        <select class="form-input" id="safety">
+                            <option value="">Select preference</option>
+                            <option value="conservative">Conservative (Daily Driver)</option>
+                            <option value="moderate">Moderate (Weekend Fun)</option>
+                            <option value="aggressive">Aggressive (Track Use)</option>
+                            <option value="yolo">YOLO (Kenny Powers Mode)</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Driver Weight (lbs)</label>
+                        <input type="number" class="form-input" id="driverWeight" placeholder="180" value="180">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Number of Passengers</label>
+                        <select class="form-input" id="passengers">
+                            <option value="0">0 (Driver Only)</option>
+                            <option value="1">1 Passenger</option>
+                            <option value="2">2 Passengers</option>
+                            <option value="3">3 Passengers</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Gear Used for Pull</label>
+                        <select class="form-input" id="selectedGear">
+                            <option value="3">3rd Gear</option>
+                            <option value="4">4th Gear</option>
+                        </select>
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Vehicle Weight (lbs)</label>
+                        <input type="number" class="form-input" id="weight" placeholder="3500" value="3500">
+                    </div>
+                    
+                    <div class="form-group">
+                        <label class="form-label">Tire Size</label>
+                        <input type="text" class="form-input" id="tireSize" placeholder="245/40R18" value="245/40R18">
+                    </div>
+                </div>
+                
+                <div class="analyze-section">
+                    <button class="btn btn-primary" id="analyzeBtn" disabled>
+                        Analyze My Tune
+                    </button>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Loading Overlay -->
+    <div class="loading-overlay" id="loadingOverlay">
+        <div class="loading-content">
+            <div class="spinner"></div>
+            <div class="loading-text">Analyzing Your Datalog</div>
+            <div class="loading-steps">
+                <div class="loading-step" id="step1">
+                    <span>•</span> Reading datalog file
+                </div>
+                <div class="loading-step" id="step2">
+                    <span>•</span> Loading baseline comparison
+                </div>
+                <div class="loading-step" id="step3">
+                    <span>•</span> Calculating virtual dyno
+                </div>
+                <div class="loading-step" id="step4">
+                    <span>•</span> Analyzing parameters
+                </div>
+                <div class="loading-step" id="step5">
+                    <span>•</span> Generating report
+                </div>
+            </div>
+        </div>
+    </div>
+    
+    <!-- Results Section -->
+    <div class="container">
+        <section class="results-section" id="resultsSection">
+            <div class="results-header">
+                <h2 class="section-title">Your Analysis Results</h2>
+                <div class="power-gain">+<span id="powerGainValue">47</span> WHP Available</div>
+                <p class="section-subtitle">Here's how your tune compares to M-TUNED</p>
+            </div>
+            
+            <!-- Dyno Chart -->
+            <div class="dyno-container">
+                <div class="chart-controls" style="display: flex; justify-content: space-between; align-items: center; flex-wrap: wrap;">
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="checkbox" id="showPower" checked style="width: 16px; height: 16px;">
+                            <span>Power</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="checkbox" id="showTorque" style="width: 16px; height: 16px;">
+                            <span>Torque</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="checkbox" id="showBoost" style="width: 16px; height: 16px;">
+                            <span>Boost</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.5rem;">
+                            <input type="checkbox" id="showAFR" style="width: 16px; height: 16px;">
+                            <span>AFR</span>
+                        </label>
+                        <label style="display: flex; align-items: center; gap: 0.5rem; margin-left: 2rem; padding-left: 2rem; border-left: 1px solid rgba(255,255,255,0.1);">
+                            <input type="checkbox" id="hideBaseline" style="width: 16px; height: 16px;">
+                            <span style="color: var(--text-muted);">Hide Baseline</span>
+                        </label>
+                    </div>
+                    <div style="display: flex; gap: 1rem; align-items: center;">
+                        <label style="display: flex; align-items: center; gap: 0.5rem; color: var(--text-muted); font-size: 0.875rem;">
+                            Smoothing:
+                            <select id="smoothingLevel" style="background: var(--light); border: 1px solid rgba(255,255,255,0.1); border-radius: 0.5rem; color: var(--text); padding: 0.25rem 0.5rem;">
+                                <option value="1">1 (Raw)</option>
+                                <option value="2">2</option>
+                                <option value="3" selected>3</option>
+                                <option value="4">4</option>
+                                <option value="5">5 (Smooth)</option>
+                            </select>
+                        </label>
+                    </div>
+                </div>
+                <div id="dynoChart"></div>
+            </div>
+            
+            <!-- Analysis Cards -->
+            <div class="analysis-grid">
+                <div class="analysis-card good">
+                    <div class="analysis-title">
+                        <div class="analysis-icon">✓</div>
+                        Peak Power
+                    </div>
+                    <div class="analysis-value"><span id="currentPower">268</span> WHP</div>
+                    <div class="analysis-description">
+                        Your current peak power. M-TUNED can achieve <span id="potentialPower">315</span> WHP safely.
+                    </div>
+                </div>
+                
+                <div class="analysis-card warning">
+                    <div class="analysis-title">
+                        <div class="analysis-icon">!</div>
+                        Boost Control
+                    </div>
+                    <div class="analysis-value"><span id="boostValue">18.5</span> PSI</div>
+                    <div class="analysis-description">
+                        Running conservative boost. Safe headroom for <span id="boostPotential">21</span> PSI.
+                    </div>
+                </div>
+                
+                <div class="analysis-card good">
+                    <div class="analysis-title">
+                        <div class="analysis-icon">✓</div>
+                        Fuel Trims
+                    </div>
+                    <div class="analysis-value"><span id="fuelTrimValue">+3</span>%</div>
+                    <div class="analysis-description">
+                        Fuel trims within safe range. No fueling issues detected.
+                    </div>
+                </div>
+                
+                <div class="analysis-card danger" id="knockCard" style="display: none;">
+                    <div class="analysis-title">
+                        <div class="analysis-icon">✗</div>
+                        Knock Events
+                    </div>
+                    <div class="analysis-value"><span id="knockValue">0</span>°</div>
+                    <div class="analysis-description">
+                        Knock correction detected. Timing needs adjustment for safety.
+                    </div>
+                </div>
+            </div>
+            
+            <!-- CTA Section -->
+            <div class="cta-section">
+                <h3 class="cta-title">Ready to Unlock Your Power?</h3>
+                <p class="cta-subtitle">Get your custom M-TUNED calibration and feel the difference</p>
+                <div class="cta-buttons">
+                    <button class="btn btn-primary">Get M-TUNED Now</button>
+                    <button class="btn btn-secondary" id="downloadReportBtn">Download Report</button>
+                </div>
+            </div>
+        </section>
+    </div>
+    
+    <!-- Footer -->
+    <footer>
+        <p>&copy; 2024 M-TUNED. Professional Subaru Tuning.</p>
+    </footer>
+    
+    <script>
+        // CSV Parser class
+        class CSVParser {
+            static parse(text) {
+                const lines = text.trim().split('\n');
+                const headers = lines[0].split(',').map(h => h.trim());
+                const data = [];
+                
+                for (let i = 1; i < lines.length; i++) {
+                    const values = lines[i].split(',');
+                    const row = {};
+                    headers.forEach((header, index) => {
+                        row[header] = values[index] ? values[index].trim() : '';
+                    });
+                    data.push(row);
+                }
+                
+                return { headers, data };
+            }
+        }
+        
+        // Gear Ratio Database - EXACT ratios from factory specs
+        const GEAR_RATIOS = {
+            '2022-wrx': { // VB WRX 6MT
+                gears: {
+                    1: 3.636,
+                    2: 2.375,
+                    3: 1.761,
+                    4: 1.346,
+                    5: 1.062,
+                    6: 0.842
+                },
+                final: 4.111
+            },
+            '2015-2021-wrx': { // VA WRX 6MT
+                gears: {
+                    1: 3.636,
+                    2: 2.235,
+                    3: 1.521,
+                    4: 1.137,
+                    5: 0.971,
+                    6: 0.756
+                },
+                final: 4.111
+            },
+            '2015-2021-sti': { // VA STI 6MT
+                gears: {
+                    1: 3.636,
+                    2: 2.375,
+                    3: 1.761,
+                    4: 1.346,
+                    5: 0.971,
+                    6: 0.756
+                },
+                final: 3.900  // Lower final drive than WRX
+            },
+            '2008-2014-wrx': { // GR/GV WRX 5MT
+                gears: {
+                    1: 3.454,
+                    2: 1.947,
+                    3: 1.366,
+                    4: 0.972,
+                    5: 0.738
+                },
+                final: 4.444
+            },
+            '2004-2007-sti': { // GD STI 6MT
+                gears: {
+                    1: 3.636,
+                    2: 2.375,
+                    3: 1.761,
+                    4: 1.346,
+                    5: 0.971,
+                    6: 0.756
+                },
+                final: 3.900
+            }
+        };
+        
+        // Virtual Dyno Calculator
+        class VirtualDyno {
+            constructor(vehicleWeight = 3400, vehicle = '2022-wrx', tireSize = '245/40R18', selectedGear = 3) {
+                this.vehicleWeight = vehicleWeight;
+                this.drivetrainLoss = 0.15; // 15% for AWD (Virtual Dyno typically uses lower values)
+                this.vehicle = vehicle;
+                this.gearRatios = GEAR_RATIOS[vehicle] || GEAR_RATIOS['2022-wrx'];
+                this.tireCircumference = this.calculateTireCircumference(tireSize);
+                this.smoothingLevel = 3; // Default smoothing
+                this.selectedGear = selectedGear; // User selected gear
+            }
+            
+            calculateTireCircumference(tireSize) {
+                // Parse tire size like "245/40R18"
+                const parts = tireSize.match(/(\d+)\/(\d+)R(\d+)/);
+                if (!parts) return 81.68; // Default for 245/40R18
+                
+                const width = parseInt(parts[1]);
+                const aspectRatio = parseInt(parts[2]);
+                const rimDiameter = parseInt(parts[3]);
+                
+                // Calculate tire diameter in inches
+                const sidewallHeight = (width * aspectRatio / 100) / 25.4; // Convert mm to inches
+                const tireDiameter = (rimDiameter + 2 * sidewallHeight);
+                
+                // Circumference in inches
+                return Math.PI * tireDiameter;
+            }
+            
+            calculateBoost(row) {
+                // Try different boost column names
+                let boost = parseFloat(row['Boost (psi)'] || 0);
+                
+                // If no boost column, calculate from MAP
+                if (boost === 0) {
+                    const map = parseFloat(row['Man Abs Press (psi)'] || row['MAP (psi)'] || 14.7);
+                    boost = map - 14.7; // Convert absolute to gauge pressure
+                }
+                
+                return Math.max(0, boost); // No negative boost
+            }
+            
+            findPulls(data) {
+                const pulls = [];
+                let currentPull = [];
+                let inPull = false;
+                
+                // Possible throttle column names
+                const throttleColumns = [
+                    'Throttle Pos (%)', 'Accel Position (%)', 'Throttle Position (%)',
+                    'TPS (%)', 'APS (%)', 'Accelerator Position (%)',
+                    'Throttle', 'TPS', 'APS', 'Accel Pedal (%)',
+                    'Throttle Position', 'Accelerator Pedal Position (%)'
+                ];
+                
+                // Find which throttle column exists
+                let throttleColumn = null;
+                for (let col of throttleColumns) {
+                    if (data[0] && data[0][col] !== undefined) {
+                        throttleColumn = col;
+                        break;
+                    }
+                }
+                
+                if (!throttleColumn) {
+                    console.log('No throttle column found! Available columns:', Object.keys(data[0] || {}));
+                    return pulls;
+                }
+                
+                console.log('Using throttle column:', throttleColumn);
+                
+                for (let i = 0; i < data.length; i++) {
+                    const row = data[i];
+                    let throttle = parseFloat(row[throttleColumn] || 0);
+                    
+                    // Handle 0-1 scale vs 0-100 scale
+                    if (throttle <= 1.0 && throttle > 0) {
+                        // Check if this is likely 0-1 scale by looking at max values
+                        let maxThrottle = 0;
+                        for (let j = Math.max(0, i - 50); j < Math.min(data.length, i + 50); j++) {
+                            maxThrottle = Math.max(maxThrottle, parseFloat(data[j][throttleColumn] || 0));
+                        }
+                        if (maxThrottle <= 1.0) {
+                            throttle = throttle * 100; // Convert to percentage
+                        }
+                    }
+                    
+                    const rpm = parseInt(row['RPM (RPM)'] || row['RPM'] || row['Engine Speed (RPM)'] || 0);
+                    
+                    // Detect pull when TPS > 75% and RPM is reasonable
+                    if (throttle > 75 && rpm > 2000) {
+                        if (!inPull) {
+                            inPull = true;
+                            currentPull = [];
+                            console.log(`Starting pull at time ${row['Time (sec)']}, TPS: ${throttle.toFixed(1)}%, RPM: ${rpm}`);
+                        }
+                        
+                        // Extract all relevant data
+                        const dataPoint = {
+                            time: parseFloat(row['Time (sec)'] || row['Time'] || 0),
+                            rpm: rpm,
+                            speed: parseFloat(row['Vehicle Speed (mph)'] || row['Speed (mph)'] || row['Vehicle Speed'] || 0),
+                            boost: this.calculateBoost(row),
+                            load: parseFloat(row['Calculated Load (g/rev)'] || row['Load (g/rev)'] || row['Engine Load'] || 0),
+                            throttle: throttle,
+                            gear: this.selectedGear, // Use manually selected gear
+                            afr: parseFloat(row['AF Sens 1 Ratio (AFR)'] || row['AFR'] || row['Comm Fuel Final (AFR)'] || 14.7),
+                            knock: parseFloat(row['Feedback Knock (°)'] || row['Knock Retard (°)'] || 0),
+                            dam: parseFloat(row['Dyn Adv Mult (DAM)'] || row['DAM'] || 1)
+                        };
+                        
+                        currentPull.push(dataPoint);
+                    } else if (inPull && (throttle < 50 || rpm < 2000)) {
+                        // End of pull
+                        if (currentPull.length > 10) { // Reduced minimum length
+                            console.log(`Ending pull with ${currentPull.length} data points`);
+                            pulls.push(currentPull);
+                        }
+                        inPull = false;
+                        currentPull = [];
+                    }
+                }
+                
+                // Don't forget the last pull
+                if (inPull && currentPull.length > 10) {
+                    console.log(`Adding final pull with ${currentPull.length} data points`);
+                    pulls.push(currentPull);
+                }
+                
+                console.log(`Found ${pulls.length} pulls total`);
+                
+                // If no pulls found, try a more lenient search
+                if (pulls.length === 0) {
+                    console.log('No pulls found with standard criteria, trying lenient search...');
+                    
+                    // Look for any sustained high throttle period
+                    for (let i = 0; i < data.length - 20; i++) {
+                        const row = data[i];
+                        let throttle = parseFloat(row[throttleColumn] || 0);
+                        if (throttle <= 1.0) throttle *= 100;
+                        
+                        const rpm = parseInt(row['RPM (RPM)'] || row['RPM'] || 0);
+                        
+                        if (throttle > 70 && rpm > 2500) {
+                            // Check if throttle stays high for next 20 samples
+                            let sustainedWOT = true;
+                            for (let j = i; j < Math.min(i + 20, data.length); j++) {
+                                let checkThrottle = parseFloat(data[j][throttleColumn] || 0);
+                                if (checkThrottle <= 1.0) checkThrottle *= 100;
+                                if (checkThrottle < 70) {
+                                    sustainedWOT = false;
+                                    break;
+                                }
+                            }
+                            
+                            if (sustainedWOT) {
+                                // Found a potential pull, extract it
+                                const pull = [];
+                                for (let j = i; j < data.length; j++) {
+                                    let pullThrottle = parseFloat(data[j][throttleColumn] || 0);
+                                    if (pullThrottle <= 1.0) pullThrottle *= 100;
+                                    
+                                    if (pullThrottle < 50) break; // End of pull
+                                    
+                                    const dataPoint = {
+                                        time: parseFloat(data[j]['Time (sec)'] || 0),
+                                        rpm: parseInt(data[j]['RPM (RPM)'] || data[j]['RPM'] || 0),
+                                        speed: parseFloat(data[j]['Vehicle Speed (mph)'] || 0),
+                                        boost: this.calculateBoost(data[j]),
+                                        load: parseFloat(data[j]['Calculated Load (g/rev)'] || 0),
+                                        throttle: pullThrottle,
+                                        gear: this.selectedGear, // Use selected gear
+                                        afr: parseFloat(data[j]['AF Sens 1 Ratio (AFR)'] || 14.7),
+                                        knock: parseFloat(data[j]['Feedback Knock (°)'] || 0),
+                                        dam: parseFloat(data[j]['Dyn Adv Mult (DAM)'] || 1)
+                                    };
+                                    
+                                    pull.push(dataPoint);
+                                }
+                                
+                                if (pull.length > 10) {
+                                    console.log(`Found lenient pull with ${pull.length} points`);
+                                    pulls.push(pull);
+                                    break; // Just get one good pull
+                                }
+                            }
+                        }
+                    }
+                }
+                
+                return pulls;
+            }
+            
+            calculatePowerAndTorque(pull) {
+                const results = [];
+                
+                // Virtual Dyno constants
+                const g = 32.174; // ft/s²
+                
+                // Vehicle parameters - calibrated to match Virtual Dyno defaults
+                const Cd = 0.35; // WRX/STI typical drag coefficient
+                const A = 25.0; // Frontal area in ft² (~2.32 m²)
+                const Crr = 0.013; // Rolling resistance coefficient
+                const airDensity = 0.00238; // slugs/ft³ at sea level
+                
+                // Calibration factor to match Virtual Dyno output
+                // VD is VERY conservative - a real 310hp car shows as ~190hp
+                const VD_CALIBRATION = 0.55; // Tuned to match VD's output
+                
+                // Get gear info
+                const gear = this.selectedGear;
+                const gearRatio = this.gearRatios.gears[gear];
+                
+                if (!gearRatio) {
+                    console.error(`No gear ratio found for gear ${gear}!`);
+                    return [];
+                }
+                
+                const finalDrive = this.gearRatios.final;
+                const totalRatio = gearRatio * finalDrive;
+                
+                // Tire radius in feet
+                const tireRadiusFt = this.tireCircumference / (2 * Math.PI) / 12;
+                
+                console.log(`Using gear ${gear}, ratio ${gearRatio}, final ${finalDrive}, total ${totalRatio.toFixed(3)}`);
+                console.log(`Tire radius: ${tireRadiusFt.toFixed(3)} ft, circumference: ${this.tireCircumference.toFixed(1)} inches`);
+                console.log(`Vehicle weight: ${this.vehicleWeight} lbs`);
+                
+                // Calculate acceleration for each point using central difference
+                const accelData = [];
+                
+                for (let i = 5; i < pull.length - 5; i++) {
+                    // Use wider window for more stable acceleration
+                    const samples = [];
+                    
+                    for (let j = -3; j <= 3; j++) {
+                        if (j !== 0) {
+                            const idx1 = i + j - 1;
+                            const idx2 = i + j + 1;
+                            
+                            if (idx1 >= 0 && idx2 < pull.length) {
+                                const dt = pull[idx2].time - pull[idx1].time;
+                                const dv = pull[idx2].speed - pull[idx1].speed;
+                                
+                                if (dt > 0 && dt < 0.5) {
+                                    samples.push(dv / dt); // mph/s
+                                }
+                            }
+                        }
+                    }
+                    
+                    if (samples.length >= 3) {
+                        // Remove outliers and average
+                        samples.sort((a, b) => a - b);
+                        const trimmed = samples.slice(1, -1); // Remove highest and lowest
+                        const avgAccelMPHS = trimmed.reduce((a, b) => a + b) / trimmed.length;
+                        const accelFTS2 = avgAccelMPHS * 1.467; // ft/s²
+                        
+                        // Calculate wheel RPM from engine RPM
+                        const wheelRPM = pull[i].rpm / totalRatio;
+                        
+                        accelData.push({
+                            ...pull[i],
+                            accel: accelFTS2,
+                            wheelRPM: wheelRPM
+                        });
+                    }
+                }
+                
+                console.log(`Calculated acceleration for ${accelData.length} points`);
+                
+                // Calculate power and torque
+                accelData.forEach(point => {
+                    const speedFts = point.speed * 1.467; // ft/s
+                    const speedMPH = point.speed;
+                    
+                    // Only process acceleration above threshold and reasonable speeds
+                    if (point.accel > 0.3 && speedMPH > 20 && point.rpm > 2000 && point.rpm < 7500) {
+                        // Calculate forces in lbs
+                        const massSlug = this.vehicleWeight / g; // Convert weight to mass in slugs
+                        const inertialForce = massSlug * point.accel; // F = ma
+                        
+                        // Drag force increases with speed squared
+                        const dragForce = 0.5 * airDensity * Cd * A * speedFts * speedFts;
+                        
+                        // Rolling resistance is proportional to weight
+                        const rollingForce = Crr * this.vehicleWeight;
+                        
+                        // Total tractive force at wheels
+                        const totalForce = inertialForce + dragForce + rollingForce;
+                        
+                        // Wheel torque from force and tire radius
+                        const wheelTorque = totalForce * tireRadiusFt;
+                        
+                        // Engine torque (accounting for gear reduction and drivetrain loss)
+                        const engineTorque = (wheelTorque / totalRatio) / (1 - this.drivetrainLoss);
+                        
+                        // Engine power from torque and RPM
+                        const enginePower = (engineTorque * point.rpm) / 5252;
+                        
+                        // Apply Virtual Dyno calibration factor
+                        const calibratedPower = enginePower * VD_CALIBRATION;
+                        const calibratedTorque = engineTorque * VD_CALIBRATION;
+                        
+                        // Sanity checks
+                        if (calibratedPower > 50 && calibratedPower < 400 && 
+                            calibratedTorque > 50 && calibratedTorque < 400) {
+                            
+                            results.push({
+                                rpm: point.rpm,
+                                power: calibratedPower,
+                                torque: calibratedTorque,
+                                boost: point.boost,
+                                afr: point.afr,
+                                speed: point.speed,
+                                gear: gear,
+                                time: point.time,
+                                wheelRPM: point.wheelRPM,
+                                accel: point.accel
+                            });
+                        }
+                    }
+                });
+                
+                if (results.length === 0) {
+                    console.log('No valid calculations - check data quality and acceleration threshold');
+                    return [];
+                }
+                
+                console.log(`Raw calculations: ${results.length} points`);
+                const rawMax = Math.max(...results.map(r => r.power));
+                const rawMaxTq = Math.max(...results.map(r => r.torque));
+                console.log(`Raw peak: ${rawMax.toFixed(1)} HP, ${rawMaxTq.toFixed(1)} TQ`);
+                
+                // Final smoothing
+                return this.finalizeResults(results);
+            }
+            
+            finalizeResults(results) {
+                // Sort by RPM
+                results.sort((a, b) => a.rpm - b.rpm);
+                
+                // Group into RPM bins for smoothing
+                const rpmBins = {};
+                const binSize = 100; // 100 RPM bins
+                
+                results.forEach(r => {
+                    const bin = Math.round(r.rpm / binSize) * binSize;
+                    if (!rpmBins[bin]) {
+                        rpmBins[bin] = [];
+                    }
+                    rpmBins[bin].push(r);
+                });
+                
+                // Average each bin
+                const smoothed = [];
+                
+                Object.keys(rpmBins).sort((a, b) => a - b).forEach(bin => {
+                    const points = rpmBins[bin];
+                    if (points.length > 0) {
+                        const avg = {
+                            rpm: parseInt(bin),
+                            power: points.reduce((sum, p) => sum + p.power, 0) / points.length,
+                            torque: points.reduce((sum, p) => sum + p.torque, 0) / points.length,
+                            boost: points.reduce((sum, p) => sum + p.boost, 0) / points.length,
+                            afr: points.reduce((sum, p) => sum + p.afr, 0) / points.length,
+                            speed: points[0].speed,
+                            gear: points[0].gear,
+                            time: points[0].time
+                        };
+                        smoothed.push(avg);
+                    }
+                });
+                
+                // Apply final smoothing pass
+                const finalSmoothed = [];
+                const window = 2;
+                
+                for (let i = 0; i < smoothed.length; i++) {
+                    let sumPower = 0, sumTorque = 0, count = 0;
+                    
+                    for (let j = Math.max(0, i - window); j <= Math.min(smoothed.length - 1, i + window); j++) {
+                        const weight = 1 - Math.abs(i - j) / (window + 1);
+                        sumPower += smoothed[j].power * weight;
+                        sumTorque += smoothed[j].torque * weight;
+                        count += weight;
+                    }
+                    
+                    finalSmoothed.push({
+                        ...smoothed[i],
+                        power: sumPower / count,
+                        torque: sumTorque / count
+                    });
+                }
+                
+                // Log results
+                if (finalSmoothed.length > 0) {
+                    const maxPower = Math.max(...finalSmoothed.map(r => r.power));
+                    const maxTorque = Math.max(...finalSmoothed.map(r => r.torque));
+                    const peakTorqueRPM = finalSmoothed.find(r => r.torque === maxTorque)?.rpm || 0;
+                    const peakPowerRPM = finalSmoothed.find(r => r.power === maxPower)?.rpm || 0;
+                    
+                    console.log(`Peak Power: ${Math.round(maxPower)} HP @ ${peakPowerRPM} RPM`);
+                    console.log(`Peak Torque: ${Math.round(maxTorque)} TQ @ ${peakTorqueRPM} RPM`);
+                }
+                
+                return finalSmoothed;
+            }
+            
+            applyFinalSmoothing(results) {
+                // Legacy method - now handled in finalizeResults
+                return results;
+            }
+            
+            percentile(arr, p) {
+                const sorted = arr.slice().sort((a, b) => a - b);
+                const index = (p / 100) * (sorted.length - 1);
+                const lower = Math.floor(index);
+                const upper = Math.ceil(index);
+                const weight = index % 1;
+                
+                if (lower === upper) {
+                    return sorted[lower];
+                }
+                
+                return sorted[lower] * (1 - weight) + sorted[upper] * weight;
+            }
+            
+            groupByGear(pull) {
+                // Since we're using a manually selected gear, all data is in the same gear
+                // Just return the whole pull as one group
+                return [pull];
+            }
+            
+            smoothResults(results) {
+                if (this.smoothingLevel === 1) return results; // Raw data
+                
+                const smoothed = [];
+                const window = Math.floor(this.smoothingLevel * 1.5);
+                
+                for (let i = 0; i < results.length; i++) {
+                    let sumPower = 0, sumTorque = 0, sumBoost = 0, sumAFR = 0;
+                    let count = 0;
+                    
+                    for (let j = Math.max(0, i - window); j <= Math.min(results.length - 1, i + window); j++) {
+                        const weight = 1 - Math.abs(i - j) / (window + 1);
+                        sumPower += results[j].power * weight;
+                        sumTorque += results[j].torque * weight;
+                        sumBoost += results[j].boost * weight;
+                        sumAFR += results[j].afr * weight;
+                        count += weight;
+                    }
+                    
+                    smoothed.push({
+                        ...results[i],
+                        power: sumPower / count,
+                        torque: sumTorque / count,
+                        boost: sumBoost / count,
+                        afr: sumAFR / count
+                    });
+                }
+                
+                return smoothed;
+            }
+            
+            calculatePower(pull) {
+                // Legacy method for compatibility
+                return this.calculatePowerAndTorque(pull);
+            }
+            
+            smoothPowerCurve(curve) {
+                // Legacy method for compatibility
+                return curve;
+            }
+        }
+        
+        // Main Application
+        class TuneAnalyzer {
+            constructor() {
+                this.uploadedFile = null;
+                this.userLog = null;
+                this.baselineLog = null;
+                this.config = {};
+                this.analysisData = null;
+                this.chartOptions = {
+                    showPower: true,
+                    showTorque: false,
+                    showBoost: false,
+                    showAFR: false
+                };
+                this.hideBaseline = false;
+                
+                this.initializeEventListeners();
+            }
+            
+            initializeEventListeners() {
+                // Upload handling
+                const uploadArea = document.getElementById('uploadArea');
+                const fileInput = document.getElementById('fileInput');
+                
+                uploadArea.addEventListener('click', () => fileInput.click());
+                
+                uploadArea.addEventListener('dragover', (e) => {
+                    e.preventDefault();
+                    uploadArea.classList.add('dragover');
+                });
+                
+                uploadArea.addEventListener('dragleave', () => {
+                    uploadArea.classList.remove('dragover');
+                });
+                
+                uploadArea.addEventListener('drop', (e) => {
+                    e.preventDefault();
+                    uploadArea.classList.remove('dragover');
+                    
+                    const files = e.dataTransfer.files;
+                    if (files.length > 0 && files[0].type === 'text/csv') {
+                        this.handleFile(files[0]);
+                    }
+                });
+                
+                fileInput.addEventListener('change', (e) => {
+                    if (e.target.files.length > 0) {
+                        this.handleFile(e.target.files[0]);
+                    }
+                });
+                
+                // Form inputs
+                document.querySelectorAll('.form-input').forEach(input => {
+                    input.addEventListener('change', () => this.checkFormCompletion());
+                });
+                
+                // Analyze button
+                document.getElementById('analyzeBtn').addEventListener('click', () => this.analyze());
+            }
+            
+            initializeChartControls() {
+                // Chart control checkboxes - initialize after results are shown
+                ['showPower', 'showTorque', 'showBoost', 'showAFR', 'hideBaseline'].forEach(id => {
+                    const checkbox = document.getElementById(id);
+                    if (checkbox) {
+                        checkbox.addEventListener('change', (e) => {
+                            if (id === 'hideBaseline') {
+                                this.hideBaseline = e.target.checked;
+                            } else {
+                                this.chartOptions[id] = e.target.checked;
+                            }
+                            if (this.analysisData) {
+                                this.createDynoChart();
+                            }
+                        });
+                    }
+                });
+                
+                // Smoothing control
+                const smoothingSelect = document.getElementById('smoothingLevel');
+                if (smoothingSelect) {
+                    smoothingSelect.addEventListener('change', (e) => {
+                        const level = parseInt(e.target.value);
+                        if (this.analysisData && this.analysisData.dyno) {
+                            this.analysisData.dyno.smoothingLevel = level;
+                            this.recalculateResults();
+                        }
+                    });
+                }
+                
+                // Download report button - ensure we get the right button
+                setTimeout(() => {
+                    const downloadBtn = document.getElementById('downloadReportBtn');
+                    if (downloadBtn && !downloadBtn.hasAttribute('data-initialized')) {
+                        downloadBtn.setAttribute('data-initialized', 'true');
+                        downloadBtn.addEventListener('click', () => this.downloadReport());
+                    }
+                }, 100);
+            }
+            
+            handleFile(file) {
+                this.uploadedFile = file;
+                
+                // Update UI
+                const uploadArea = document.getElementById('uploadArea');
+                uploadArea.innerHTML = `
+                    <div class="upload-icon">✓</div>
+                    <div class="upload-text">${file.name}</div>
+                    <div class="file-info">File loaded successfully</div>
+                `;
+                
+                // Show configuration section
+                document.getElementById('configSection').classList.add('show');
+                
+                // Read file
+                const reader = new FileReader();
+                reader.onload = (e) => {
+                    const parsed = CSVParser.parse(e.target.result);
+                    this.userLog = parsed;
+                    
+                    // Log some debug info
+                    console.log('CSV loaded with', parsed.data.length, 'rows');
+                    console.log('Available columns:', Object.keys(parsed.data[0] || {}));
+                    
+                    // Check for throttle data
+                    const firstRow = parsed.data[0];
+                    if (firstRow) {
+                        const throttleColumns = Object.keys(firstRow).filter(col => 
+                            col.toLowerCase().includes('throttle') || 
+                            col.toLowerCase().includes('accel') ||
+                            col.toLowerCase().includes('tps') ||
+                            col.toLowerCase().includes('aps')
+                        );
+                        console.log('Found throttle-related columns:', throttleColumns);
+                    }
+                };
+                reader.readAsText(file);
+                
+                this.checkFormCompletion();
+            }
+            
+            checkFormCompletion() {
+                const vehicle = document.getElementById('vehicle').value;
+                const modLevel = document.getElementById('modLevel').value;
+                const fuel = document.getElementById('fuel').value;
+                const safety = document.getElementById('safety').value;
+                const driverWeight = document.getElementById('driverWeight').value;
+                const selectedGear = document.getElementById('selectedGear').value;
+                
+                const analyzeBtn = document.getElementById('analyzeBtn');
+                
+                if (this.uploadedFile && vehicle && modLevel && fuel && safety && driverWeight && selectedGear) {
+                    analyzeBtn.disabled = false;
+                } else {
+                    analyzeBtn.disabled = true;
+                }
+            }
+            
+            async analyze() {
+                // Get form values
+                const baseWeight = parseFloat(document.getElementById('weight').value) || 3400;
+                const driverWeight = parseFloat(document.getElementById('driverWeight').value) || 180;
+                const numPassengers = parseInt(document.getElementById('passengers').value) || 0;
+                const passengerWeight = numPassengers * 150; // Assume 150 lbs per passenger
+                
+                // Calculate total weight
+                const totalWeight = baseWeight + driverWeight + passengerWeight;
+                console.log(`Total weight: ${totalWeight} lbs (base: ${baseWeight}, driver: ${driverWeight}, passengers: ${passengerWeight})`);
+                
+                this.config = {
+                    vehicle: document.getElementById('vehicle').value,
+                    modLevel: document.getElementById('modLevel').value,
+                    fuel: document.getElementById('fuel').value,
+                    safety: document.getElementById('safety').value,
+                    weight: totalWeight,
+                    baseWeight: baseWeight,
+                    tireSize: document.getElementById('tireSize').value,
+                    selectedGear: parseInt(document.getElementById('selectedGear').value) || 3
+                };
+                
+                // Show loading
+                document.getElementById('loadingOverlay').style.display = 'flex';
+                
+                // Simulate analysis steps
+                await this.simulateAnalysisSteps();
+                
+                // Calculate results
+                this.calculateResults();
+                
+                // Hide loading and show results
+                document.getElementById('loadingOverlay').style.display = 'none';
+                document.getElementById('resultsSection').style.display = 'block';
+                document.getElementById('resultsSection').scrollIntoView({ behavior: 'smooth' });
+                
+                // Initialize chart controls after results are shown
+                this.initializeChartControls();
+            }
+            
+            async simulateAnalysisSteps() {
+                const steps = ['step1', 'step2', 'step3', 'step4', 'step5'];
+                
+                for (let step of steps) {
+                    document.getElementById(step).classList.add('active');
+                    await this.sleep(800);
+                    document.getElementById(step).classList.remove('active');
+                    document.getElementById(step).classList.add('complete');
+                }
+            }
+            
+            sleep(ms) {
+                return new Promise(resolve => setTimeout(resolve, ms));
+            }
+            
+            calculateResults() {
+                // Virtual Dyno calculation with proper gear ratios
+                const dyno = new VirtualDyno(
+                    this.config.weight,
+                    this.config.vehicle,
+                    this.config.tireSize,
+                    this.config.selectedGear
+                );
+                
+                const pulls = dyno.findPulls(this.userLog.data);
+                console.log(`Analysis found ${pulls.length} pulls`);
+                
+                let currentPower = 190; // Default if no pulls found
+                let currentTorque = 216;
+                let currentBoost = 18.5;
+                let powerCurve = null;
+                let maxRPM = 6500;
+                
+                if (pulls.length > 0) {
+                    // Use the longest pull
+                    const longestPull = pulls.reduce((a, b) => a.length > b.length ? a : b);
+                    console.log(`Using longest pull with ${longestPull.length} data points`);
+                    
+                    powerCurve = dyno.calculatePowerAndTorque(longestPull);
+                    
+                    if (powerCurve && powerCurve.length > 0) {
+                        currentPower = Math.round(Math.max(...powerCurve.map(p => p.power)));
+                        currentTorque = Math.round(Math.max(...powerCurve.map(p => p.torque)));
+                        currentBoost = Math.round(Math.max(...powerCurve.map(p => p.boost)) * 10) / 10;
+                        maxRPM = Math.max(...powerCurve.map(p => p.rpm));
+                        
+                        console.log(`Calculated: ${currentPower} WHP, ${currentTorque} WTQ, ${currentBoost} PSI boost`);
+                    }
+                    
+                    // Store the analysis data
+                    this.analysisData = {
+                        pull: longestPull,
+                        powerCurve: powerCurve,
+                        maxRPM: maxRPM,
+                        dyno: dyno
+                    };
+                } else {
+                    // No pulls found, use synthetic data
+                    console.log('No pulls found, using synthetic data');
+                    this.analysisData = null;
+                }
+                
+                // Calculate potential based on config
+                const potentialPower = this.calculatePotentialPower();
+                const potentialTorque = this.calculatePotentialTorque();
+                const powerGain = potentialPower - currentPower;
+                
+                // Update UI
+                document.getElementById('powerGainValue').textContent = powerGain;
+                document.getElementById('currentPower').textContent = currentPower;
+                document.getElementById('potentialPower').textContent = potentialPower;
+                document.getElementById('boostValue').textContent = currentBoost;
+                document.getElementById('boostPotential').textContent = this.getBoostLimit();
+                
+                // Update torque in the UI (add torque display)
+                const powerCard = document.querySelector('.analysis-card:first-child');
+                powerCard.querySelector('.analysis-value').innerHTML = 
+                    `<span id="currentPower">${currentPower}</span> WHP / <span style="font-size: 1.5rem;">${currentTorque} WTQ</span>`;
+                powerCard.querySelector('.analysis-description').innerHTML = 
+                    `Your current peak power. M-TUNED can achieve <span id="potentialPower">${potentialPower}</span> WHP / ${potentialTorque} WTQ safely.`;
+                
+                // Analyze for issues
+                this.analyzeForIssues();
+                
+                // Create initial chart
+                this.createDynoChart();
+            }
+            
+            recalculateResults() {
+                if (!this.analysisData || !this.analysisData.pull) return;
+                
+                // Update dyno with new smoothing level and ensure selected gear is used
+                this.analysisData.dyno.selectedGear = this.config.selectedGear;
+                
+                // Recalculate with new smoothing level
+                const powerCurve = this.analysisData.dyno.calculatePowerAndTorque(this.analysisData.pull);
+                this.analysisData.powerCurve = powerCurve;
+                
+                if (powerCurve && powerCurve.length > 0) {
+                    // Update display
+                    const currentPower = Math.round(Math.max(...powerCurve.map(p => p.power)));
+                    const currentTorque = Math.round(Math.max(...powerCurve.map(p => p.torque)));
+                    
+                    document.getElementById('currentPower').textContent = currentPower;
+                    const powerCard = document.querySelector('.analysis-card:first-child');
+                    powerCard.querySelector('.analysis-value').innerHTML = 
+                        `<span id="currentPower">${currentPower}</span> WHP / <span style="font-size: 1.5rem;">${currentTorque} WTQ</span>`;
+                    
+                    // Redraw chart
+                    this.createDynoChart();
+                }
+            }
+            
+            calculatePotentialTorque() {
+                const baseTorque = {
+                    '2022-wrx': { stock: 280, stage1: 340, stage2: 380, stage2plus: 400, flex: 420, bigturbo: 450, built: 550 },
+                    '2015-2021-wrx': { stock: 260, stage1: 310, stage2: 350, stage2plus: 370, flex: 400, bigturbo: 420, built: 500 },
+                    '2015-2021-sti': { stock: 310, stage1: 360, stage2: 400, stage2plus: 420, flex: 440, bigturbo: 500, built: 650 }
+                };
+                
+                const vehicle = this.config.vehicle;
+                const modLevel = this.config.modLevel;
+                
+                let torque = baseTorque[vehicle]?.[modLevel] || 350;
+                
+                // Adjust for fuel
+                if (this.config.fuel === '91') torque *= 0.95;
+                if (this.config.fuel === 'e30') torque *= 1.05;
+                if (this.config.fuel === 'e50') torque *= 1.08;
+                if (this.config.fuel === 'e85') torque *= 1.10;
+                
+                // Adjust for safety
+                if (this.config.safety === 'conservative') torque *= 0.95;
+                if (this.config.safety === 'aggressive') torque *= 1.05;
+                if (this.config.safety === 'yolo') torque *= 1.10; // Kenny Powers mode!
+                
+                return Math.round(torque);
+            }
+            
+            analyzeForIssues() {
+                if (!this.userLog || !this.userLog.data) return;
+                
+                // Check for knock events
+                let maxKnock = 0;
+                let knockCount = 0;
+                let damDrop = false;
+                
+                this.userLog.data.forEach(row => {
+                    const knock = Math.abs(parseFloat(row['Feedback Knock (°)'] || 0));
+                    const dam = parseFloat(row['Dyn Adv Mult (DAM)'] || 1);
+                    
+                    if (knock > 2.5) {
+                        knockCount++;
+                        maxKnock = Math.max(maxKnock, knock);
+                    }
+                    
+                    if (dam < 1.0) {
+                        damDrop = true;
+                    }
+                });
+                
+                // Update knock card
+                const knockCard = document.getElementById('knockCard');
+                if (knockCount > 0 || damDrop) {
+                    knockCard.style.display = 'block';
+                    document.getElementById('knockValue').textContent = maxKnock.toFixed(1);
+                    
+                    if (damDrop) {
+                        knockCard.querySelector('.analysis-description').textContent = 
+                            'DAM dropped below 1.0! Immediate attention required.';
+                    }
+                } else {
+                    knockCard.style.display = 'none';
+                }
+                
+                // Check fuel trims
+                let avgTrim = 0;
+                let trimCount = 0;
+                
+                this.userLog.data.forEach(row => {
+                    const trim = parseFloat(row['AF 1 Trims Total (%)'] || 0);
+                    if (!isNaN(trim)) {
+                        avgTrim += trim;
+                        trimCount++;
+                    }
+                });
+                
+                if (trimCount > 0) {
+                    avgTrim = avgTrim / trimCount;
+                    document.getElementById('fuelTrimValue').textContent = 
+                        (avgTrim > 0 ? '+' : '') + avgTrim.toFixed(1);
+                    
+                    // Update card class based on trim
+                    const trimCard = document.querySelector('.analysis-card:nth-child(3)');
+                    trimCard.classList.remove('good', 'warning', 'danger');
+                    
+                    if (Math.abs(avgTrim) <= 5) {
+                        trimCard.classList.add('good');
+                    } else if (Math.abs(avgTrim) <= 10) {
+                        trimCard.classList.add('warning');
+                    } else {
+                        trimCard.classList.add('danger');
+                    }
+                }
+            }
+            
+            calculatePotentialPower() {
+                const basePower = {
+                    '2022-wrx': { stock: 240, stage1: 280, stage2: 315, stage2plus: 330, flex: 350, bigturbo: 400, built: 500 },
+                    '2015-2021-wrx': { stock: 220, stage1: 260, stage2: 290, stage2plus: 310, flex: 340, bigturbo: 380, built: 450 },
+                    '2015-2021-sti': { stock: 260, stage1: 300, stage2: 340, stage2plus: 360, flex: 380, bigturbo: 450, built: 600 }
+                };
+                
+                const vehicle = this.config.vehicle;
+                const modLevel = this.config.modLevel;
+                
+                let power = basePower[vehicle]?.[modLevel] || 300;
+                
+                // Adjust for fuel
+                if (this.config.fuel === '91') power *= 0.95;
+                if (this.config.fuel === 'e30') power *= 1.05;
+                if (this.config.fuel === 'e50') power *= 1.08;
+                if (this.config.fuel === 'e85') power *= 1.10;
+                
+                // Adjust for safety
+                if (this.config.safety === 'conservative') power *= 0.95;
+                if (this.config.safety === 'aggressive') power *= 1.05;
+                if (this.config.safety === 'yolo') power *= 1.10; // Kenny Powers mode!
+                
+                return Math.round(power);
+            }
+            
+            getBoostLimit() {
+                const boostLimits = {
+                    '2022-wrx': { '91': 17, '93': 19, 'e30': 21, 'e50': 21, 'e85': 21 },
+                    '2015-2021-wrx': { '91': 18, '93': 20, 'e30': 22, 'e50': 22, 'e85': 22 },
+                    '2015-2021-sti': { '91': 20, '93': 22, 'e30': 24, 'e50': 24, 'e85': 24 },
+                    '2008-2014-wrx': { '91': 19, '93': 21, 'e30': 23, 'e50': 23, 'e85': 23 },
+                    '2004-2007-sti': { '91': 20, '93': 22, 'e30': 24, 'e50': 24, 'e85': 24 }
+                };
+                
+                let boost = boostLimits[this.config.vehicle]?.[this.config.fuel] || 20;
+                
+                // Adjust for safety preference
+                if (this.config.safety === 'conservative') boost -= 1;
+                if (this.config.safety === 'aggressive') boost += 2;
+                if (this.config.safety === 'yolo') boost += 3; // Kenny Powers says send it!
+                
+                return boost;
+            }
+            
+            createDynoChart() {
+                const chartContainer = document.getElementById('dynoChart');
+                
+                if (!this.analysisData || !this.analysisData.powerCurve || this.analysisData.powerCurve.length === 0) {
+                    // No data, show helpful message
+                    const message = this.analysisData ? 
+                        'No valid pull data found. Ensure the log contains sustained throttle > 75% periods.' :
+                        'No pull data found. Upload a log with TPS > 75% pulls.';
+                    
+                    chartContainer.innerHTML = `
+                        <div style="text-align: center; padding: 3rem; color: var(--text-muted);">
+                            <p style="font-size: 1.125rem; margin-bottom: 1rem;">${message}</p>
+                            <p style="font-size: 0.875rem;">Tip: A valid pull requires:</p>
+                            <ul style="list-style: none; font-size: 0.875rem; margin-top: 0.5rem;">
+                                <li>• Throttle Position > 75%</li>
+                                <li>• RPM > 2000</li>
+                                <li>• Valid gear selected (1-6)</li>
+                                <li>• Sustained for at least 10 data points</li>
+                            </ul>
+                        </div>
+                    `;
+                    return;
+                }
+                
+                // Create overlay chart with all selected data types
+                const chartHTML = this.createOverlayChart();
+                chartContainer.innerHTML = chartHTML;
+            }
+            
+            createOverlayChart() {
+                const rpmRange = [2000, 2500, 3000, 3500, 4000, 4500, 5000, 5500, 6000, 6500, 7000];
+                const data = this.analysisData.powerCurve;
+                
+                // Prepare data series
+                const series = [];
+                
+                if (this.chartOptions.showPower) {
+                    series.push({
+                        name: 'Power (WHP)',
+                        color: '#10b981',
+                        data: data.map(d => ({ rpm: d.rpm, value: d.power })),
+                        scale: { min: 0, max: 500, step: 100 },
+                        axis: 'left'
+                    });
+                }
+                
+                if (this.chartOptions.showTorque) {
+                    series.push({
+                        name: 'Torque (WTQ)',
+                        color: '#f59e0b',
+                        data: data.map(d => ({ rpm: d.rpm, value: d.torque })),
+                        scale: { min: 0, max: 500, step: 100 },
+                        axis: 'left'
+                    });
+                }
+                
+                if (this.chartOptions.showBoost) {
+                    series.push({
+                        name: 'Boost (PSI)',
+                        color: '#6366f1',
+                        data: data.map(d => ({ rpm: d.rpm, value: d.boost })),
+                        scale: { min: 0, max: 30, step: 5 },
+                        axis: 'right'
+                    });
+                }
+                
+                if (this.chartOptions.showAFR) {
+                    series.push({
+                        name: 'AFR',
+                        color: '#ef4444',
+                        data: data.map(d => ({ rpm: d.rpm, value: d.afr })),
+                        scale: { min: 10, max: 15, step: 1 },
+                        axis: 'right2'
+                    });
+                }
+                
+                if (series.length === 0) {
+                    return '<div style="text-align: center; padding: 3rem; color: var(--text-muted);">Select at least one data type to display.</div>';
+                }
+                
+                // Find left and right axis scales
+                const leftAxisSeries = series.filter(s => s.axis === 'left');
+                const rightAxisSeries = series.filter(s => s.axis === 'right');
+                const right2AxisSeries = series.filter(s => s.axis === 'right2');
+                
+                // Normalize scales for left axis
+                let leftMax = 0;
+                if (leftAxisSeries.length > 0) {
+                    leftMax = Math.max(...leftAxisSeries.map(s => Math.max(...s.data.map(d => d.value))));
+                    leftMax = Math.ceil(leftMax / 50) * 50; // Round up to nearest 50
+                }
+                
+                return `
+                    <svg viewBox="0 0 1000 500" style="width: 100%; height: 100%;">
+                        <!-- Grid -->
+                        <g stroke="rgba(255,255,255,0.1)" stroke-width="1">
+                            ${[0, 100, 200, 300, 400, 500].map(y => 
+                                `<line x1="80" y1="${450 - (y / 500 * 400)}" x2="920" y2="${450 - (y / 500 * 400)}" />`
+                            ).join('')}
+                            ${rpmRange.map((rpm, i) => 
+                                `<line x1="${80 + i * 76}" y1="50" x2="${80 + i * 76}" y2="450" />`
+                            ).join('')}
+                        </g>
+                        
+                        <!-- Axes -->
+                        <g stroke="rgba(255,255,255,0.3)" stroke-width="2">
+                            <line x1="80" y1="450" x2="920" y2="450" />
+                            <line x1="80" y1="50" x2="80" y2="450" />
+                            ${rightAxisSeries.length > 0 ? '<line x1="920" y1="50" x2="920" y2="450" />' : ''}
+                        </g>
+                        
+                        <!-- Left Y-axis labels (Power/Torque) -->
+                        ${leftAxisSeries.length > 0 ? `
+                            <g fill="#94a3b8" font-size="12">
+                                ${[0, 100, 200, 300, 400, 500].map(y => 
+                                    `<text x="60" y="${455 - (y / 500 * 400)}" text-anchor="end">${y}</text>`
+                                ).join('')}
+                                <text x="25" y="250" text-anchor="middle" font-size="14" transform="rotate(-90 25 250)">HP / TQ</text>
+                            </g>
+                        ` : ''}
+                        
+                        <!-- Right Y-axis labels (Boost) -->
+                        ${rightAxisSeries.length > 0 ? `
+                            <g fill="${rightAxisSeries[0].color}" font-size="12">
+                                ${[0, 5, 10, 15, 20, 25, 30].map(y => 
+                                    `<text x="940" y="${455 - (y / 30 * 400)}" text-anchor="start">${y}</text>`
+                                ).join('')}
+                                <text x="975" y="250" text-anchor="middle" font-size="14" transform="rotate(90 975 250)">Boost (PSI)</text>
+                            </g>
+                        ` : ''}
+                        
+                        <!-- X-axis labels -->
+                        <g fill="#94a3b8" font-size="12">
+                            ${rpmRange.map((rpm, i) => 
+                                `<text x="${80 + i * 76}" y="475" text-anchor="middle">${rpm/1000}k</text>`
+                            ).join('')}
+                            <text x="500" y="495" text-anchor="middle" font-size="14">RPM</text>
+                        </g>
+                        
+                        <!-- Data curves -->
+                        <g fill="none" stroke-width="3">
+                            ${series.map(s => {
+                                const points = this.dataToOverlayPoints(s.data, rpmRange, s);
+                                return `<polyline stroke="${s.color}" points="${points}" />`;
+                            }).join('')}
+                        </g>
+                        
+                        <!-- Legend -->
+                        <g font-size="14">
+                            ${series.map((s, i) => `
+                                <rect x="100" y="${70 + i * 25}" width="15" height="3" fill="${s.color}" />
+                                <text x="120" y="${75 + i * 25}" fill="#94a3b8">${s.name}</text>
+                            `).join('')}
+                        </g>
+                        
+                        <!-- Peak values -->
+                        <g font-size="12" fill="#94a3b8">
+                            ${series.map((s, i) => {
+                                const peak = Math.max(...s.data.map(d => d.value));
+                                const peakPoint = s.data.find(d => d.value === peak);
+                                const peakRPM = peakPoint ? peakPoint.rpm : 0;
+                                return `<text x="100" y="${390 + i * 20}" fill="${s.color}">
+                                    ${s.name}: ${Math.round(peak)} @ ${Math.round(peakRPM)} RPM
+                                </text>`;
+                            }).join('')}
+                        </g>
+                    </svg>
+                `;
+            }
+            
+            dataToOverlayPoints(data, rpmRange, series) {
+                const points = [];
+                
+                rpmRange.forEach((rpm, i) => {
+                    const x = 80 + i * 76;
+                    
+                    // Find closest data point
+                    let value = 0;
+                    let closestDiff = Infinity;
+                    
+                    data.forEach(d => {
+                        const diff = Math.abs(d.rpm - rpm);
+                        if (diff < closestDiff) {
+                            closestDiff = diff;
+                            value = d.value;
+                        }
+                    });
+                    
+                    // Scale based on axis
+                    let y;
+                    if (series.axis === 'left') {
+                        y = 450 - (value / 500 * 400);
+                    } else if (series.axis === 'right') {
+                        y = 450 - (value / 30 * 400);
+                    } else if (series.axis === 'right2') {
+                        y = 450 - ((value - 10) / 5 * 400);
+                    }
+                    
+                    points.push(`${x},${Math.max(50, Math.min(450, y))}`);
+                });
+                
+                return points.join(' ');
+            }
+            
+            getTargetAFR() {
+                const fuel = this.config.fuel;
+                
+                if (fuel === '91') return 11.0;
+                if (fuel === '93') return 11.2;
+                if (fuel === 'e30') return 11.5;
+                if (fuel === 'e50') return 11.8;
+                if (fuel === 'e85') return 12.0;
+                
+                return 11.2; // Default
+            }
+            
+            downloadReport() {
+                if (!this.analysisData || !this.analysisData.powerCurve) {
+                    alert('No analysis data to download. Please analyze a log first.');
+                    return;
+                }
+                
+                // Create canvas for dyno chart
+                const canvas = document.createElement('canvas');
+                canvas.width = 1200;
+                canvas.height = 800;
+                const ctx = canvas.getContext('2d');
+                
+                // Background
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(0, 0, canvas.width, canvas.height);
+                
+                // Draw border
+                ctx.strokeStyle = '#000000';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(20, 20, canvas.width - 40, canvas.height - 40);
+                
+                // Title
+                ctx.fillStyle = '#000000';
+                ctx.font = 'bold 32px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('M-TUNED VIRTUAL DYNO', canvas.width / 2, 60);
+                
+                // Date and vehicle info
+                ctx.font = '16px Arial';
+                ctx.fillText(new Date().toLocaleString(), canvas.width / 2, 85);
+                ctx.fillText(`${this.config.vehicle.toUpperCase()} | ${this.config.modLevel.toUpperCase()} | ${this.config.fuel.toUpperCase()} OCTANE`, canvas.width / 2, 105);
+                
+                // Chart area
+                const chartX = 100;
+                const chartY = 150;
+                const chartWidth = 1000;
+                const chartHeight = 500;
+                
+                // Grid background
+                ctx.fillStyle = '#f5f5f5';
+                ctx.fillRect(chartX, chartY, chartWidth, chartHeight);
+                
+                // Grid lines
+                ctx.strokeStyle = '#cccccc';
+                ctx.lineWidth = 1;
+                
+                // Vertical grid (RPM)
+                for (let i = 0; i <= 10; i++) {
+                    const x = chartX + (chartWidth * i / 10);
+                    ctx.beginPath();
+                    ctx.moveTo(x, chartY);
+                    ctx.lineTo(x, chartY + chartHeight);
+                    ctx.stroke();
+                    
+                    // RPM labels
+                    ctx.fillStyle = '#000000';
+                    ctx.font = '12px Arial';
+                    ctx.textAlign = 'center';
+                    const rpm = 2000 + (i * 500);
+                    ctx.fillText(rpm.toString(), x, chartY + chartHeight + 20);
+                }
+                
+                // Horizontal grid (Power/Torque)
+                const maxPower = 500;
+                const maxTorque = 500;
+                
+                for (let i = 0; i <= 10; i++) {
+                    const y = chartY + chartHeight - (chartHeight * i / 10);
+                    ctx.beginPath();
+                    ctx.moveTo(chartX, y);
+                    ctx.lineTo(chartX + chartWidth, y);
+                    ctx.stroke();
+                    
+                    // Power labels (left)
+                    ctx.fillStyle = '#ff0000';
+                    ctx.font = '12px Arial';
+                    ctx.textAlign = 'right';
+                    const power = (maxPower * i / 10);
+                    ctx.fillText(power.toString(), chartX - 10, y + 5);
+                    
+                    // Torque labels (right)
+                    ctx.fillStyle = '#0000ff';
+                    ctx.textAlign = 'left';
+                    const torque = (maxTorque * i / 10);
+                    ctx.fillText(torque.toString(), chartX + chartWidth + 10, y + 5);
+                }
+                
+                // Axis labels
+                ctx.fillStyle = '#ff0000';
+                ctx.font = 'bold 14px Arial';
+                ctx.save();
+                ctx.translate(40, chartY + chartHeight / 2);
+                ctx.rotate(-Math.PI / 2);
+                ctx.textAlign = 'center';
+                ctx.fillText('HORSEPOWER', 0, 0);
+                ctx.restore();
+                
+                ctx.fillStyle = '#0000ff';
+                ctx.save();
+                ctx.translate(chartX + chartWidth + 60, chartY + chartHeight / 2);
+                ctx.rotate(Math.PI / 2);
+                ctx.textAlign = 'center';
+                ctx.fillText('TORQUE (LB-FT)', 0, 0);
+                ctx.restore();
+                
+                ctx.fillStyle = '#000000';
+                ctx.font = 'bold 14px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillText('ENGINE SPEED (RPM)', chartX + chartWidth / 2, chartY + chartHeight + 50);
+                
+                // Plot data
+                const data = this.analysisData.powerCurve;
+                const minRPM = 2000;
+                const maxRPM = 7000;
+                
+                // Power curve
+                ctx.strokeStyle = '#ff0000';
+                ctx.lineWidth = 3;
+                ctx.beginPath();
+                
+                data.forEach((point, i) => {
+                    if (point.rpm >= minRPM && point.rpm <= maxRPM) {
+                        const x = chartX + ((point.rpm - minRPM) / (maxRPM - minRPM)) * chartWidth;
+                        const y = chartY + chartHeight - (point.power / maxPower) * chartHeight;
+                        
+                        if (i === 0 || data[i-1].rpm < minRPM) {
+                            ctx.moveTo(x, y);
+                        } else {
+                            ctx.lineTo(x, y);
+                        }
+                    }
+                });
+                ctx.stroke();
+                
+                // Torque curve
+                ctx.strokeStyle = '#0000ff';
+                ctx.beginPath();
+                
+                data.forEach((point, i) => {
+                    if (point.rpm >= minRPM && point.rpm <= maxRPM) {
+                        const x = chartX + ((point.rpm - minRPM) / (maxRPM - minRPM)) * chartWidth;
+                        const y = chartY + chartHeight - (point.torque / maxTorque) * chartHeight;
+                        
+                        if (i === 0 || data[i-1].rpm < minRPM) {
+                            ctx.moveTo(x, y);
+                        } else {
+                            ctx.lineTo(x, y);
+                        }
+                    }
+                });
+                ctx.stroke();
+                
+                // Peak values box
+                const peakPower = Math.round(Math.max(...data.map(p => p.power)));
+                const peakTorque = Math.round(Math.max(...data.map(p => p.torque)));
+                const peakPowerRPM = data.find(p => p.power === Math.max(...data.map(p => p.power))).rpm;
+                const peakTorqueRPM = data.find(p => p.torque === Math.max(...data.map(p => p.torque))).rpm;
+                
+                ctx.fillStyle = '#ffffff';
+                ctx.fillRect(chartX + 20, chartY + 20, 300, 120);
+                ctx.strokeStyle = '#000000';
+                ctx.lineWidth = 2;
+                ctx.strokeRect(chartX + 20, chartY + 20, 300, 120);
+                
+                ctx.fillStyle = '#000000';
+                ctx.font = 'bold 16px Arial';
+                ctx.textAlign = 'left';
+                ctx.fillText('PEAK PERFORMANCE', chartX + 30, chartY + 45);
+                
+                ctx.font = '14px Arial';
+                ctx.fillStyle = '#ff0000';
+                ctx.fillText(`Power: ${peakPower} HP @ ${Math.round(peakPowerRPM)} RPM`, chartX + 30, chartY + 70);
+                
+                ctx.fillStyle = '#0000ff';
+                ctx.fillText(`Torque: ${peakTorque} LB-FT @ ${Math.round(peakTorqueRPM)} RPM`, chartX + 30, chartY + 90);
+                
+                // Sneaky M-TUNED gains message
+                const potentialPower = this.calculatePotentialPower();
+                const potentialTorque = this.calculatePotentialTorque();
+                ctx.fillStyle = '#008000';
+                ctx.font = 'italic 12px Arial';
+                ctx.fillText(`Potential with M-TUNED: +${potentialPower - peakPower} HP / +${potentialTorque - peakTorque} TQ`, chartX + 30, chartY + 115);
+                
+                // Legend
+                ctx.fillStyle = '#ff0000';
+                ctx.fillRect(chartX + chartWidth - 200, chartY + 20, 20, 3);
+                ctx.fillStyle = '#000000';
+                ctx.font = '14px Arial';
+                ctx.textAlign = 'left';
+                ctx.fillText('Horsepower', chartX + chartWidth - 170, chartY + 25);
+                
+                ctx.fillStyle = '#0000ff';
+                ctx.fillRect(chartX + chartWidth - 200, chartY + 40, 20, 3);
+                ctx.fillStyle = '#000000';
+                ctx.fillText('Torque', chartX + chartWidth - 170, chartY + 45);
+                
+                // Add M-TUNED potential to legend if baseline not hidden
+                if (!this.hideBaseline) {
+                    ctx.fillStyle = '#008800';
+                    ctx.fillRect(chartX + chartWidth - 200, chartY + 60, 20, 3);
+                    ctx.fillStyle = '#000000';
+                    ctx.fillText('M-TUNED Potential', chartX + chartWidth - 170, chartY + 65);
+                    
+                    // Draw potential curves
+                    const potentialPower = this.calculatePotentialPower();
+                    const potentialTorque = this.calculatePotentialTorque();
+                    
+                    // Synthetic potential power curve
+                    ctx.strokeStyle = '#008800';
+                    ctx.lineWidth = 2;
+                    ctx.setLineDash([5, 5]);
+                    ctx.beginPath();
+                    
+                    for (let rpm = minRPM; rpm <= maxRPM; rpm += 100) {
+                        const x = chartX + ((rpm - minRPM) / (maxRPM - minRPM)) * chartWidth;
+                        let power;
+                        
+                        if (rpm <= 5800) {
+                            power = potentialPower * Math.pow(rpm / 5800, 2.2);
+                        } else {
+                            power = potentialPower * Math.pow((7500 - rpm) / (7500 - 5800), 1.5);
+                        }
+                        
+                        const y = chartY + chartHeight - (power / maxPower) * chartHeight;
+                        
+                        if (rpm === minRPM) {
+                            ctx.moveTo(x, y);
+                        } else {
+                            ctx.lineTo(x, y);
+                        }
+                    }
+                    ctx.stroke();
+                    ctx.setLineDash([]);
+                }
+                
+                // Footer
+                ctx.font = '12px Arial';
+                ctx.textAlign = 'center';
+                ctx.fillStyle = '#666666';
+                ctx.fillText('Calculated using M-TUNED Virtual Dyno System | getmtuned.com', canvas.width / 2, canvas.height - 30);
+                
+                // Convert to JPEG and download
+                canvas.toBlob((blob) => {
+                    const url = window.URL.createObjectURL(blob);
+                    const a = document.createElement('a');
+                    a.setAttribute('hidden', '');
+                    a.setAttribute('href', url);
+                    a.setAttribute('download', `MTUNED_Dyno_${new Date().toISOString().slice(0,10)}.jpg`);
+                    document.body.appendChild(a);
+                    a.click();
+                    document.body.removeChild(a);
+                    window.URL.revokeObjectURL(url);
+                }, 'image/jpeg', 0.95);
+            }
+        }
+        
+        // Initialize application
+        const app = new TuneAnalyzer();
+    </script>
+</body>
+</html>
