@@ -1757,13 +1757,12 @@
                     
                     // Power at wheels (watts)
                     const wheelPowerWatts = totalForce * point.speed;
-                    
-                    // Convert to HP and account for drivetrain loss
+
+                    // Convert to wheel horsepower
                     const wheelHP = wheelPowerWatts / 745.7;
-                    const engineHP = wheelHP / (1 - this.drivetrainLoss);
-                    
+
                     // Apply SAE correction
-                    const correctedHP = engineHP * cf;
+                    const correctedHP = wheelHP * cf;
                     
                     // Calculate torque from power
                     const torqueLbFt = (correctedHP * 5252) / point.rpm;
@@ -1793,7 +1792,7 @@
                     const maxPower = Math.max(...results.map(r => r.power));
                     const maxTorque = Math.max(...results.map(r => r.torque));
                     console.log(`Raw Peak: ${maxPower.toFixed(1)} HP, ${maxTorque.toFixed(1)} TQ`);
-                    console.log(`SAE CF: ${cf.toFixed(3)}, Drivetrain Loss: ${(this.drivetrainLoss * 100).toFixed(1)}%`);
+                    console.log(`SAE CF: ${cf.toFixed(3)}, Drivetrain Loss Factor: ${(this.drivetrainLoss * 100).toFixed(1)}%`);
                 }
                 
                 return results;
