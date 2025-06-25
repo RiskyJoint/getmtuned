@@ -2071,11 +2071,11 @@
                                 this.hideBaseline = e.target.checked;
                             } else if (id === 'dynojetMode') {
                                 this.dynojetMode = e.target.checked;
-                                console.log('Dynojet mode changed to:', this.dynojetMode);
                                 // Recalculate with new mode
                                 if (this.analysisData) {
                                     this.recalculateWithDynojetMode();
-                                    this.forceChartRefresh();
+                                    // Directly call createDynoChart
+                                    this.createDynoChart();
                                 }
                                 return;
                             } else {
@@ -2093,10 +2093,10 @@
                 if (smoothingSelect) {
                     smoothingSelect.addEventListener('change', (e) => {
                         const level = parseInt(e.target.value);
-                        console.log('Smoothing changed to:', level);
                         if (this.analysisData) {
                             this.recalculateWithSmoothing(level);
-                            this.forceChartRefresh();
+                            // Directly call createDynoChart
+                            this.createDynoChart();
                         }
                     });
                 }
@@ -2677,7 +2677,7 @@
             
             createDynoChart() {
                 const chartContainer = document.getElementById('dynoChart');
-                
+
                 if (!this.analysisData || !this.analysisData.powerCurve || this.analysisData.powerCurve.length === 0) {
                     chartContainer.innerHTML = `
                         <div style="text-align: center; padding: 4rem; color: var(--silver);">
@@ -2687,7 +2687,11 @@
                     `;
                     return;
                 }
-                
+
+                // Force the browser to clear and repaint
+                chartContainer.innerHTML = '';
+                chartContainer.offsetHeight; // Force reflow
+
                 // Create premium SVG chart
                 const chartHTML = this.createPremiumChart();
                 chartContainer.innerHTML = chartHTML;
