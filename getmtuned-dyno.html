@@ -3367,9 +3367,9 @@
             });
             if(res.ok){
                 const data = await res.json();
-                chatBox.value += `AI: ${data.choices[0].message.content}\n`;
+                chatBox.value += `P-Tah: ${data.response}\n`;
             } else {
-                chatBox.value += 'AI: Unable to respond right now.\n';
+                chatBox.value += 'P-Tah: Unable to respond right now.\n';
             }
         });
     </script>
