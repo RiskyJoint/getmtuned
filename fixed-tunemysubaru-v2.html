@@ -1871,7 +1871,8 @@
             
             smoothAcceleration(accelData) {
                 // Moving average smoothing for acceleration
-                const windowRadius = 3;
+                const radiusMap = [0, 2, 4, 6, 8, 10];
+                const windowRadius = radiusMap[Math.min(this.smoothingLevel, 5)];
                 const smoothed = [];
                 
                 for (let i = 0; i < accelData.length; i++) {
@@ -2401,20 +2402,23 @@
                 // Update smoothing level
                 this.config.smoothingLevel = level;
                 
-                // Apply smoothing to USER data
+                // Re-run power calculation with new smoothing level
                 const calculator = new PowerCalculator({
                     ...this.config,
                     dynojetMode: this.dynojetMode
                 });
+                const rawCurve = calculator.calculatePowerAndTorque(this.analysisData.pull);
                 let smoothedCurve;
-                
+
                 if (level === 0) {
                     // No smoothing - use raw data
-                    smoothedCurve = [...this.analysisData.rawPowerCurve];
+                    smoothedCurve = [...rawCurve];
                 } else {
-                    // Apply smoothing to existing raw data
-                    smoothedCurve = calculator.smoothResults(this.analysisData.rawPowerCurve);
+                    smoothedCurve = calculator.smoothResults(rawCurve);
                 }
+
+                // Store new raw curve
+                this.analysisData.rawPowerCurve = rawCurve;
                 
                 // Update displayed data
                 this.analysisData.powerCurve = smoothedCurve;
@@ -2425,14 +2429,17 @@
                         ...this.config,
                         dynojetMode: this.dynojetMode
                     });
+
+                    const rawBaselineCurve = baselineCalculator.calculatePowerAndTorque(this.baselineData.pull);
                     let smoothedBaselineCurve;
-                    
+
                     if (level === 0) {
-                        smoothedBaselineCurve = [...this.baselineData.rawPowerCurve];
+                        smoothedBaselineCurve = [...rawBaselineCurve];
                     } else {
-                        smoothedBaselineCurve = baselineCalculator.smoothResults(this.baselineData.rawPowerCurve);
+                        smoothedBaselineCurve = baselineCalculator.smoothResults(rawBaselineCurve);
                     }
-                    
+
+                    this.baselineData.rawPowerCurve = rawBaselineCurve;
                     this.baselineData.powerCurve = smoothedBaselineCurve;
                 }
                 
