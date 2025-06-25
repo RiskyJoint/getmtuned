@@ -1448,7 +1448,17 @@
             </div>
         </section>
     </div>
-    
+
+    <!-- AI Chat Assistant -->
+    <section id="chatSection" class="ai-chat" style="padding:2rem;max-width:800px;margin:0 auto;">
+        <h2 style="margin-bottom:1rem;">Tuning Assistant</h2>
+        <textarea id="chatBox" readonly style="width:100%;height:200px;margin-bottom:.5rem;background:var(--gunmetal);color:var(--platinum);"></textarea>
+        <div style="display:flex;gap:.5rem;">
+            <input id="chatInput" type="text" placeholder="Ask the AI..." style="flex:1;padding:.5rem;border-radius:6px;border:1px solid var(--titanium);background:var(--dark-chrome);color:var(--platinum);">
+            <button id="chatSend" style="padding:.5rem 1rem;border:none;border-radius:6px;background:var(--boost-blue);color:white;cursor:pointer;">Send</button>
+        </div>
+    </section>
+
     <!-- Footer -->
     <footer>
         <p>© 2024 M-TUNED Performance Engineering. Excellence in Motion.</p>
@@ -3342,5 +3352,6 @@
         // Make it available globally for the request baseline button
         window.tuneAnalyzer = app;
     </script>
+    <script src="chat.js"></script>
 </body>
 </html>
