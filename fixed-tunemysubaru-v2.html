@@ -2692,11 +2692,15 @@
             }
 
             forceChartRefresh() {
-                const previous = this.chartOptions.showPower;
-                this.chartOptions.showPower = !previous;
-                this.createDynoChart();
-                this.chartOptions.showPower = previous;
-                this.createDynoChart();
+                const chartContainer = document.getElementById('dynoChart');
+                if (chartContainer) {
+                    const scrollPos = window.pageYOffset || document.documentElement.scrollTop;
+                    chartContainer.innerHTML = '';
+                    requestAnimationFrame(() => {
+                        this.createDynoChart();
+                        window.scrollTo(0, scrollPos);
+                    });
+                }
             }
 
             createPremiumChart() {
