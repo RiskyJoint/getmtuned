@@ -2069,6 +2069,9 @@
                         checkbox.addEventListener('change', (e) => {
                             if (id === 'hideBaseline') {
                                 this.hideBaseline = e.target.checked;
+                                if (this.analysisData) {
+                                    this.createDynoChart();
+                                }
                             } else if (id === 'dynojetMode') {
                                 this.dynojetMode = e.target.checked;
                                 // Recalculate with new mode
@@ -2076,12 +2079,11 @@
                                     this.recalculateWithDynojetMode();
                                     this.forceChartRefresh();
                                 }
-                                return;
                             } else {
                                 this.chartOptions[id] = e.target.checked;
-                            }
-                            if (this.analysisData) {
-                                this.createDynoChart();
+                                if (this.analysisData) {
+                                    this.createDynoChart();
+                                }
                             }
                         });
                     }
