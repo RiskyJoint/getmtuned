@@ -1,0 +1,208 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M-TUNED | Tuning Services</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600&display=swap">
+    <style>
+        :root {
+            --carbon-black: #0a0a0a;
+            --midnight: #121212;
+            --dark-chrome: #1a1a1a;
+            --racing-red: #dc2626;
+            --championship-gold: #fbbf24;
+            --platinum: #e5e5e5;
+            --silver: #a3a3a3;
+        }
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--carbon-black);
+            color: var(--platinum);
+            margin: 0;
+            padding-top: 100px;
+        }
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 15% 15%, rgba(220, 38, 38, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 85% 80%, rgba(251, 191, 36, 0.05) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: -1;
+        }
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: linear-gradient(to bottom, rgba(10, 10, 10, 0.98), rgba(10, 10, 10, 0.9));
+            backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid rgba(251, 191, 36, 0.2);
+            z-index: 1000;
+        }
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo img { height: 50px; width: auto; }
+        .nav-links { display: flex; gap: 3rem; align-items: center; }
+        .nav-link {
+            color: var(--silver);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        .nav-link:hover { color: var(--championship-gold); }
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+        }
+        .page-title {
+            text-align: center;
+            font-family: 'Orbitron', monospace;
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 3rem;
+            color: var(--championship-gold);
+        }
+        .service-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(320px, 1fr));
+            gap: 2rem;
+        }
+        .service-card {
+            background: linear-gradient(135deg, var(--midnight), var(--dark-chrome));
+            border: 1px solid rgba(251, 191, 36, 0.1);
+            border-radius: 20px;
+            padding: 2.5rem;
+            display: flex;
+            flex-direction: column;
+            transition: all 0.3s ease;
+        }
+        .service-card:hover {
+            transform: translateY(-5px);
+            border-color: rgba(251, 191, 36, 0.3);
+        }
+        .service-title {
+            font-family: 'Orbitron', monospace;
+            font-size: 1.75rem;
+            color: var(--championship-gold);
+            margin-bottom: 1rem;
+        }
+        .service-price {
+            font-size: 2.5rem;
+            font-weight: 700;
+            color: var(--platinum);
+            margin-bottom: 1.5rem;
+        }
+        .service-features {
+            list-style: none;
+            padding: 0;
+            margin-bottom: 2rem;
+            flex-grow: 1;
+        }
+        .service-features li {
+            margin-bottom: 0.75rem;
+            padding-left: 1.5rem;
+            position: relative;
+        }
+        .service-features li::before {
+            content: '✓';
+            color: var(--racing-red);
+            position: absolute;
+            left: 0;
+        }
+        .btn {
+            padding: 1rem 2rem;
+            font-size: 1rem;
+            font-weight: 700;
+            font-family: 'Orbitron', monospace;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+            border: none;
+        }
+        .btn-primary {
+            background: linear-gradient(135deg, var(--racing-red), var(--championship-gold));
+            color: white;
+        }
+        .btn-primary:hover {
+            transform: scale(1.05);
+        }
+    </style>
+</head>
+<body>
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo">
+                <img src="Untitled.png" alt="M-Tuned Logo">
+            </a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="shop.html" class="nav-link">Shop</a>
+                <a href="getmtuned-dyno.html" class="nav-link">Virtual Dyno</a>
+                <a href="faq.html" class="nav-link">FAQ</a>
+                <a href="portal.html" class="nav-link">Portal</a>
+            </div>
+        </div>
+    </nav>
+    <div class="container">
+        <h1 class="page-title">Tuning Services</h1>
+        <div class="service-grid">
+            <div class="service-card">
+                <h2 class="service-title">Stage 1 E-Tune</h2>
+                <div class="service-price">$350</div>
+                <ul class="service-features">
+                    <li>For stock or lightly modified vehicles</li>
+                    <li>Typical gains of 60+ HP</li>
+                    <li>Customized for your exact vehicle</li>
+                    <li>Improved throttle response and MPG</li>
+                    <li>Includes free revisions for 30 days</li>
+                </ul>
+                <a href="https://www.getmtuned.com/booking-calendar/2022-wrx-91-93-pro-e-tune?referral=service_list_widget" class="btn btn-primary">Order Now</a>
+            </div>
+            <div class="service-card">
+                <h2 class="service-title">Stage 2 E-Tune</h2>
+                <div class="service-price">$450</div>
+                <ul class="service-features">
+                    <li>For vehicles with upgraded intake/exhaust</li>
+                    <li>Typical gains of 80+ HP</li>
+                    <li>Optimized boost and fueling maps</li>
+                    <li>Advanced safety features enabled</li>
+                    <li>Includes free revisions for 30 days</li>
+                </ul>
+                <a href="https://www.getmtuned.com/book-online" class="btn btn-primary">Order Now</a>
+            </div>
+            <div class="service-card">
+                <h2 class="service-title">Flex Fuel E-Tune</h2>
+                <div class="service-price">$550</div>
+                <ul class="service-features">
+                    <li>Unleash the power of ethanol</li>
+                    <li>Typical gains of 100+ HP</li>
+                    <li>Dynamic maps for any ethanol blend</li>
+                    <li>Requires Flex Fuel kit installation</li>
+                    <li>Includes free revisions for 30 days</li>
+                </ul>
+                <a href="https://www.getmtuned.com/book-online" class="btn btn-primary">Order Now</a>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

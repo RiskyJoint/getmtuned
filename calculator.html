@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>M-TUNED | M-Tuned's Ethanol Mixing Station!</title>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Orbitron:wght@400;700;900&family=Rajdhani:wght@400;600&display=swap">
+    <style>
+        /* ===== CSS VARIABLES ===== */
+        :root {
+            --carbon-black: #0a0a0a;
+            --midnight: #121212;
+            --dark-chrome: #1a1a1a;
+            --racing-red: #dc2626;
+            --championship-gold: #fbbf24;
+            --platinum: #e5e5e5;
+            --silver: #a3a3a3;
+        }
+        
+        .form-input:focus {
+            outline: none;
+            border-color: var(--championship-gold);
+            box-shadow: 0 0 0 2px rgba(251, 191, 36, 0.2);
+        }
+
+        /* Base styles with gradient background */
+        body {
+            font-family: 'Rajdhani', sans-serif;
+            background: var(--carbon-black);
+            color: var(--platinum);
+            margin: 0;
+            padding-top: 100px;
+            position: relative;
+            overflow-x: hidden;
+        }
+        
+        body::before {
+            content: '';
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: 
+                radial-gradient(circle at 10% 50%, rgba(220, 38, 38, 0.1) 0%, transparent 40%),
+                radial-gradient(circle at 90% 50%, rgba(251, 191, 36, 0.05) 0%, transparent 40%);
+            pointer-events: none;
+            z-index: -1;
+        }
+
+        /* ===== NAVIGATION ===== */
+        nav {
+            position: fixed;
+            top: 0;
+            width: 100%;
+            background: linear-gradient(to bottom, rgba(10, 10, 10, 0.98), rgba(10, 10, 10, 0.9));
+            backdrop-filter: blur(20px) saturate(180%);
+            border-bottom: 1px solid rgba(251, 191, 36, 0.2);
+            z-index: 1000;
+        }
+        .nav-container {
+            max-width: 1400px;
+            margin: 0 auto;
+            padding: 1rem 2rem;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        .logo img { height: 50px; width: auto; }
+        .nav-links { display: flex; flex-wrap: wrap; gap: 2rem; align-items: center; }
+        .nav-link {
+            color: var(--silver);
+            text-decoration: none;
+            font-weight: 600;
+            font-size: 0.95rem;
+            text-transform: uppercase;
+            letter-spacing: 1px;
+            transition: all 0.3s ease;
+        }
+        .nav-link:hover { color: var(--championship-gold); }
+
+        /* ===== MAIN CONTAINER ===== */
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+            z-index: 1;
+        }
+        .page-title {
+            text-align: center;
+            font-family: 'Orbitron', monospace;
+            font-size: 3rem;
+            font-weight: 900;
+            margin-bottom: 3rem;
+            color: var(--championship-gold);
+        }
+
+        /* ===== CALCULATOR LAYOUT ===== */
+        .calculator-layout {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 3rem;
+            align-items: center;
+        }
+        /* ===== MOBILE ADJUSTMENTS ===== */
+        @media (max-width: 850px) {
+            .calculator-layout {
+                grid-template-columns: 1fr;
+            }
+            .video-container {
+                padding: 1rem;
+            }
+            .video-container video {
+                border-radius: 5px;
+            }
+        }
+
+        /* ===== GAUGE SECTION ===== */
+        .gauge-container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+        }
+        .gauge {
+            width: 450px;
+            height: 450px;
+            background-image: url('wrx-fuel-gauge-background.jpg');
+            background-size: contain;
+            background-position: center;
+            background-repeat: no-repeat;
+            position: relative;
+            cursor: pointer;
+            border-radius: 50%;
+        }
+        
+        /* ===== FIXED NEEDLE POSITIONING ===== */
+        .gauge-needle {
+            width: 3px;
+            height: 80px; /* Longer needle */
+            background-color: var(--racing-red);
+            border-radius: 2px;
+            box-shadow: 0 0 10px var(--racing-red);
+            position: absolute;
+            /* Position over the fuel gauge's white dot */
+            top: 270px;  /* Moved up 2 more pixels from 272px */
+            left: 164px; /* Moved right 1px from 163px */
+            transform-origin: 50% 100%; /* Pivot from the BOTTOM of the needle */
+            z-index: 2;
+            transition: transform 0.2s ease-out;
+        }
+
+        /* ===== GAUGE TEXT DISPLAY ===== */
+        .gauge-text {
+            font-family: 'Orbitron', monospace;
+            text-align: center;
+            margin-top: 1rem;
+        }
+        #fuel-level-display {
+            font-size: 2.5rem;
+            color: var(--platinum);
+            font-weight: 700;
+        }
+
+        /* ===== FORM STYLES ===== */
+        .form-fields { 
+            display: flex; 
+            flex-direction: column; 
+            gap: 1rem;
+        }
+        .form-group { display: flex; flex-direction: column; }
+        .form-label { 
+            font-size: 1rem; 
+            font-weight: 600; 
+            color: var(--championship-gold); 
+            margin-bottom: 0.5rem; 
+        }
+        .form-input {
+            width: 100%;
+            padding: 0.75rem 1rem;
+            background: var(--dark-chrome);
+            border: 1px solid var(--silver);
+            border-radius: 8px;
+            color: var(--platinum);
+            font-size: 1.1rem;
+            transition: all 0.3s ease;
+        }
+        
+        .form-input:read-only {
+            background: rgba(26, 26, 26, 0.5);
+            color: var(--championship-gold);
+            cursor: not-allowed;
+        }
+
+        /* ===== BUTTON STYLES ===== */
+        .btn {
+            padding: 1rem 2rem;
+            font-size: 1.25rem;
+            font-weight: 700;
+            font-family: 'Orbitron', monospace;
+            text-transform: uppercase;
+            letter-spacing: 2px;
+            border-radius: 50px;
+            cursor: pointer;
+            transition: all 0.4s ease;
+            text-decoration: none;
+            text-align: center;
+            display: inline-block;
+            border: none;
+            margin-top: 1rem;
+        }
+        .btn-primary { 
+            background: linear-gradient(135deg, var(--racing-red), var(--championship-gold)); 
+            color: white; 
+        }
+        .btn-primary:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 5px 20px rgba(251, 191, 36, 0.4);
+        }
+
+        /* ===== RESULTS SECTION ===== */
+        .results-container {
+            margin-top: 2rem;
+            padding: 2rem;
+            background: var(--dark-chrome);
+            border-radius: 10px;
+            text-align: center;
+            display: none;
+        }
+        .results-title { 
+            font-size: 1.5rem; 
+            margin-bottom: 1rem; 
+            color: var(--championship-gold); 
+        }
+        .results-text { 
+            font-size: 2rem; 
+            font-family: 'Orbitron', monospace; 
+        }
+
+        /* ===== FUEL CONTROL BUTTONS ===== */
+        .fuel-controls {
+            margin-top: 2rem;
+            display: flex;
+            flex-direction: column;
+            gap: 1rem;
+            align-items: center;
+        }
+        
+        .adjustment-buttons {
+            display: flex;
+            gap: 1rem;
+        }
+        
+        .fuel-btn {
+            width: 60px;
+            height: 60px;
+            border-radius: 50%;
+            border: 2px solid var(--racing-red);
+            background: var(--dark-chrome);
+            color: var(--racing-red);
+            font-size: 2rem;
+            font-weight: bold;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+        
+        .fuel-btn:hover {
+            background: var(--racing-red);
+            color: white;
+            transform: scale(1.1);
+        }
+        
+        .fuel-btn:active {
+            transform: scale(0.95);
+        }
+        
+        .preset-buttons {
+            display: flex;
+            gap: 0.5rem;
+        }
+        
+        .fuel-preset {
+            padding: 0.5rem 1rem;
+            background: var(--dark-chrome);
+            border: 1px solid var(--silver);
+            color: var(--platinum);
+            font-family: 'Orbitron', monospace;
+            font-weight: 600;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            min-width: 45px;
+        }
+        
+        .fuel-preset:hover {
+            background: var(--championship-gold);
+            color: var(--carbon-black);
+            border-color: var(--championship-gold);
+            transform: translateY(-2px);
+        }
+        
+        .fuel-preset:active {
+            transform: translateY(0);
+        }
+
+        /* ===== TANK SIZE BUTTONS ===== */
+        .tank-size-buttons {
+            display: flex;
+            gap: 0.5rem;
+            margin-top: 0.75rem;
+            flex-wrap: wrap;
+        }
+        
+        .tank-btn {
+            padding: 0.5rem 1rem;
+            background: var(--dark-chrome);
+            border: 1px solid var(--silver);
+            color: var(--platinum);
+            font-size: 0.875rem;
+            font-weight: 600;
+            border-radius: 20px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            white-space: nowrap;
+        }
+        
+        .tank-btn:hover {
+            background: var(--racing-red);
+            color: white;
+            border-color: var(--racing-red);
+            transform: translateY(-2px);
+        }
+        
+        /* ===== VIDEO CONTAINER ===== */
+        .video-container {
+            position: relative;
+            margin-top: 3rem;
+            padding: 2rem;
+            background: var(--dark-chrome);
+            border-radius: 10px;
+        }
+        
+        .video-container video {
+            width: 100%;
+            height: auto;
+            border-radius: 8px;
+            background: #000;
+        }
+        
+        /* ===== AUDIO INDICATOR ===== */
+        .audio-indicator {
+            position: fixed;
+            bottom: 20px;
+            right: 20px;
+            background: rgba(251, 191, 36, 0.9);
+            color: var(--carbon-black);
+            padding: 0.5rem 1rem;
+            border-radius: 25px;
+            font-family: 'Orbitron', monospace;
+            font-size: 0.875rem;
+            font-weight: 600;
+            opacity: 0;
+            transition: opacity 0.3s ease;
+            pointer-events: none;
+            z-index: 1000;
+        }
+
+        .audio-indicator.show {
+            opacity: 1;
+        }
+    </style>
+</head>
+<body>
+    <!-- ===== NAVIGATION BAR ===== -->
+    <nav>
+        <div class="nav-container">
+            <a href="index.html" class="logo"><img src="Untitled.png" alt="M-Tuned Logo"></a>
+            <div class="nav-links">
+                <a href="index.html" class="nav-link">Home</a>
+                <a href="shop.html" class="nav-link">Shop</a>
+                <a href="getmtuned-dyno.html" class="nav-link">Virtual Dyno</a>
+                <a href="calculator.html" class="nav-link">E-85 Calc</a>
+                <a href="faq.html" class="nav-link">FAQ</a>
+                <a href="portal.html" class="nav-link">Portal</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- ===== MAIN CONTENT ===== -->
+    <div class="container">
+        <h1 class="page-title">M-Tuned's Ethanol Mixing Station!</h1>
+        
+        <div class="calculator-layout">
+            <!-- ===== GAUGE SECTION ===== -->
+            <div class="gauge-container">
+                <div class="gauge" id="gauge">
+                    <div class="gauge-needle" id="needle"></div>
+                </div>
+                <div class="gauge-text">
+                    <p>Current Fuel Level</p>
+                    <div id="fuel-level-display">25%</div>
+                </div>
+                
+                <!-- ===== FUEL ADJUSTMENT BUTTONS ===== -->
+                <div class="fuel-controls">
+                    <div class="adjustment-buttons">
+                        <button class="fuel-btn minus" id="minus-btn">−</button>
+                        <button class="fuel-btn plus" id="plus-btn">+</button>
+                    </div>
+                    <div class="preset-buttons">
+                        <button class="fuel-preset" data-percent="0">E</button>
+                        <button class="fuel-preset" data-percent="25">¼</button>
+                        <button class="fuel-preset" data-percent="50">½</button>
+                        <button class="fuel-preset" data-percent="75">¾</button>
+                        <button class="fuel-preset" data-percent="100">F</button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- ===== FORM SECTION ===== -->
+            <div class="form-fields">
+                <div class="form-group">
+                    <label class="form-label" for="tank-size">Tank Size (Gallons)</label>
+                    <input class="form-input" id="tank-size" type="number" value="15.9" step="0.1">
+                    <div class="tank-size-buttons">
+                        <button class="tank-btn" data-size="15.9">2015-2021 WRX</button>
+                        <button class="tank-btn" data-size="16.6">2022+ WRX</button>
+                        <button class="tank-btn" id="manual-tank-btn">Manual</button>
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="current-e-content">Current Fuel's Ethanol %</label>
+                    <input class="form-input" id="current-e-content" type="number" value="10">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="target-e-content">Target Ethanol % (e.g., 60 for E60)</label>
+                    <input class="form-input" id="target-e-content" type="number" value="60">
+                </div>
+                <div class="form-group">
+                    <label class="form-label" for="e85-content">E85 Pump's Actual Ethanol %</label>
+                    <input class="form-input" id="e85-content" type="number" value="80">
+                </div>
+                <button class="btn btn-primary" id="calculate-btn">Calculate</button>
+            </div>
+        </div>
+
+        <!-- ===== RESULTS SECTION ===== -->
+        <div class="results-container" id="results">
+            <h2 class="results-title">Fuel to Add:</h2>
+            <p class="results-text" id="results-text"></p>
+        </div>
+        
+        <!-- ===== VIDEO SECTION ===== -->
+        <div class="video-container">
+            <video controls playsinline id="ethanol-video" preload="auto">
+                <source src="ethanol-background.mp4" type="video/mp4">
+                Your browser does not support the video tag.
+            </video>
+            <button class="play-button-overlay" id="play-button" style="display: none;">▶ Play with Sound</button>
+        </div>
+    </div>
+
+    <!-- ===== AUDIO INDICATOR ===== -->
+    <div class="audio-indicator" id="audio-indicator">🔊 Audio Enabled</div>
+
+    <script>
+        // Wait for DOM to be fully loaded
+        document.addEventListener('DOMContentLoaded', function() {
+            // ===== VIDEO AUDIO SETUP =====
+            let videoTriggered = false;
+            const video = document.getElementById('ethanol-video');
+            
+            // Function to trigger video with sound
+            function triggerVideoWithSound() {
+                if (!videoTriggered && video) {
+                    videoTriggered = true;
+                    
+                    // Set initial volume
+                    video.volume = 0.1;
+                    video.muted = false;
+                    
+                    // Start playing the video
+                    video.play().then(() => {
+                        // Show audio indicator
+                        const indicator = document.getElementById('audio-indicator');
+                        if (indicator) {
+                            indicator.classList.add('show');
+                            setTimeout(() => {
+                                indicator.classList.remove('show');
+                            }, 2000);
+                        }
+                        
+                        // Gradually increase volume
+                        let targetVolume = 0.7; // Don't go full volume
+                        let currentVolume = 0.1;
+                        
+                        const fadeIn = setInterval(() => {
+                            if (currentVolume < targetVolume) {
+                                currentVolume += 0.1;
+                                video.volume = Math.min(currentVolume, targetVolume);
+                            } else {
+                                clearInterval(fadeIn);
+                            }
+                        }, 100);
+                        
+                    }).catch(err => {
+                        console.log('Failed to play with sound, trying muted');
+                        video.muted = true;
+                        video.play();
+                    });
+                }
+            }
+            
+            // ===== GAUGE INTERACTION SETUP =====
+            const gauge = document.getElementById('gauge');
+            const needle = document.getElementById('needle');
+            const fuelLevelDisplay = document.getElementById('fuel-level-display');
+
+            let fuelLevelPercent = 25;
+
+            // Fixed angles for the fuel gauge (E to F sweep)
+            const minAngle = 170;  // E position 
+            const maxAngle = 290;  // F position
+            const angleRange = maxAngle - minAngle;
+
+            // Set initial needle position
+            function setNeedlePosition(percent) {
+                const angle = minAngle + (angleRange * (percent / 100));
+                needle.style.transform = `rotate(${angle}deg)`;
+            }
+            
+            // Initialize needle at 25%
+            setNeedlePosition(fuelLevelPercent);
+
+            // Common function to update fuel level
+            function updateFuelLevel(percent) {
+                fuelLevelPercent = Math.max(0, Math.min(100, percent));
+                setNeedlePosition(fuelLevelPercent);
+                fuelLevelDisplay.textContent = `${Math.round(fuelLevelPercent)}%`;
+            }
+
+            // ===== GAUGE UPDATE FUNCTION =====
+            function updateGauge(e) {
+                e.preventDefault();
+                const rect = gauge.getBoundingClientRect();
+                
+                // Fixed center point for the fuel gauge's white dot
+                const centerX = rect.left + 164; // Matches needle position
+                const centerY = rect.top + 350;  // 270 + 80 (needle height)
+                
+                const clientX = e.clientX || e.touches[0].clientX;
+                const clientY = e.clientY || e.touches[0].clientY;
+
+                // Calculate angle from center to mouse/touch position
+                let angleRad = Math.atan2(clientY - centerY, clientX - centerX);
+                let angleDeg = (angleRad * 180 / Math.PI) + 90; // Add 90 to convert to compass bearing
+                
+                // Normalize to 0-360
+                if (angleDeg < 0) angleDeg += 360;
+                
+                // Calculate percentage based on angle
+                let percentage = 0;
+                
+                if (angleDeg >= minAngle && angleDeg <= maxAngle) {
+                    // Within valid range
+                    percentage = ((angleDeg - minAngle) / angleRange) * 100;
+                } else {
+                    // Outside valid range - snap to nearest end
+                    const distToEmpty = Math.min(
+                        Math.abs(angleDeg - minAngle),
+                        Math.abs(angleDeg - minAngle + 360),
+                        Math.abs(angleDeg - minAngle - 360)
+                    );
+                    const distToFull = Math.min(
+                        Math.abs(angleDeg - maxAngle),
+                        Math.abs(angleDeg - maxAngle + 360),
+                        Math.abs(angleDeg - maxAngle - 360)
+                    );
+                    
+                    if (distToEmpty < distToFull) {
+                        percentage = 0;
+                    } else {
+                        percentage = 100;
+                    }
+                }
+                
+                fuelLevelPercent = percentage;
+                updateFuelLevel(fuelLevelPercent);
+            }
+
+            // ===== MOUSE AND TOUCH EVENT HANDLERS =====
+            let isDragging = false;
+            
+            // Trigger audio on ANY click on the gauge
+            gauge.addEventListener('click', (e) => {
+                triggerVideoWithSound(); // Immediate audio trigger on click
+            });
+            
+            // Mouse events
+            gauge.addEventListener('mousedown', (e) => { 
+                isDragging = true; 
+                triggerVideoWithSound(); // Also trigger here for redundancy
+                updateGauge(e); 
+            });
+            document.addEventListener('mousemove', (e) => { 
+                if (isDragging) { 
+                    updateGauge(e); 
+                } 
+            });
+            document.addEventListener('mouseup', () => { 
+                isDragging = false; 
+            });
+            
+            // Touch events for mobile
+            gauge.addEventListener('touchstart', (e) => { 
+                isDragging = true; 
+                triggerVideoWithSound(); // Also trigger here for redundancy
+                updateGauge(e); 
+            });
+            document.addEventListener('touchmove', (e) => { 
+                if (isDragging) { 
+                    updateGauge(e); 
+                } 
+            });
+            document.addEventListener('touchend', () => { 
+                isDragging = false; 
+            });
+
+            // ===== BUTTON CONTROLS =====
+            const plusBtn = document.getElementById('plus-btn');
+            const minusBtn = document.getElementById('minus-btn');
+            const presetBtns = document.querySelectorAll('.fuel-preset');
+
+            // Plus/Minus button functionality
+            plusBtn.addEventListener('click', () => {
+                triggerVideoWithSound(); // Trigger audio on interaction
+                updateFuelLevel(fuelLevelPercent + 5);
+            });
+
+            minusBtn.addEventListener('click', () => {
+                triggerVideoWithSound(); // Trigger audio on interaction
+                updateFuelLevel(fuelLevelPercent - 5);
+            });
+
+            // Preset button functionality
+            presetBtns.forEach(btn => {
+                btn.addEventListener('click', () => {
+                    triggerVideoWithSound(); // Trigger audio on interaction
+                    updateFuelLevel(parseInt(btn.dataset.percent));
+                });
+            });
+
+            // ===== TANK SIZE BUTTON CONTROLS =====
+            const tankSizeInput = document.getElementById('tank-size');
+            const tankBtns = document.querySelectorAll('.tank-btn');
+            const manualTankBtn = document.getElementById('manual-tank-btn');
+
+            tankBtns.forEach(btn => {
+                btn.addEventListener('click', (e) => {
+                    e.preventDefault(); // Prevent any form submission
+                    
+                    if (btn.dataset.size) {
+                        // Remove active class from all buttons
+                        tankBtns.forEach(b => b.classList.remove('active'));
+                        // Add active class to clicked button
+                        btn.classList.add('active');
+                        // Set the tank size value
+                        tankSizeInput.value = btn.dataset.size;
+                        // Make input readonly
+                        tankSizeInput.readOnly = true;
+                    } else if (btn === manualTankBtn) {
+                        // Remove active class from all buttons
+                        tankBtns.forEach(b => b.classList.remove('active'));
+                        // Add active class to manual button
+                        btn.classList.add('active');
+                        // Enable manual input
+                        tankSizeInput.readOnly = false;
+                        tankSizeInput.focus();
+                    }
+                });
+            });
+
+            // Set initial state - 2015-2021 WRX selected by default
+            tankBtns[0].classList.add('active');
+            tankSizeInput.readOnly = true;
+
+            // ===== CALCULATION LOGIC =====
+            const calculateBtn = document.getElementById('calculate-btn');
+            const resultsContainer = document.getElementById('results');
+            const resultsText = document.getElementById('results-text');
+
+            calculateBtn.addEventListener('click', () => {
+                // Get input values
+                const tankSize = parseFloat(document.getElementById('tank-size').value);
+                const currentE = parseFloat(document.getElementById('current-e-content').value) / 100;
+                const targetE = parseFloat(document.getElementById('target-e-content').value) / 100;
+                const e85E = parseFloat(document.getElementById('e85-content').value) / 100;
+                const pumpGasE = 0.10; // Assume 10% ethanol in pump gas
+
+                // Calculate current fuel amount and ethanol content
+                const fuelInTank = tankSize * (fuelLevelPercent / 100);
+                const ethanolInTank = fuelInTank * currentE;
+                
+                // Calculate target ethanol amount
+                const totalEthanolNeeded = tankSize * targetE;
+                const ethanolToAdd = totalEthanolNeeded - ethanolInTank;
+                const fuelToAdd = tankSize - fuelInTank;
+                
+                // Calculate E85 and pump gas amounts
+                let e85ToAdd = (ethanolToAdd - (fuelToAdd * pumpGasE)) / (e85E - pumpGasE);
+                
+                // Error checking
+                if (e85E <= pumpGasE) {
+                    resultsText.textContent = 'E85 content must be higher than pump gas content.';
+                    resultsContainer.style.display = 'block';
+                    return;
+                }
+
+                let pumpGasToAdd = fuelToAdd - e85ToAdd;
+
+                // Display results
+                if (e85ToAdd < 0 || pumpGasToAdd < 0 || e85ToAdd > fuelToAdd || pumpGasToAdd > fuelToAdd) {
+                    resultsText.innerHTML = "Target blend is not possible with these settings.";
+                } else {
+                    resultsText.innerHTML = `${e85ToAdd.toFixed(2)} gal of E85 <br>+<br> ${pumpGasToAdd.toFixed(2)} gal of Pump Gas`;
+                }
+                resultsContainer.style.display = 'block';
+            });
+            
+            // ===== KEYBOARD CONTROLS =====
+            document.addEventListener('keydown', (e) => {
+                if (e.key === 'ArrowUp' || e.key === 'ArrowRight') {
+                    e.preventDefault();
+                    updateFuelLevel(fuelLevelPercent + 5);
+                } else if (e.key === 'ArrowDown' || e.key === 'ArrowLeft') {
+                    e.preventDefault();
+                    updateFuelLevel(fuelLevelPercent - 5);
+                }
+            });
+            
+            // ===== VIDEO FADE OUT ON END =====
+            const bgVideo = document.querySelector('.video-background video');
+            if (bgVideo) {
+                bgVideo.addEventListener('ended', function() {
+                    bgVideo.style.transition = 'opacity 1s ease-out';
+                    bgVideo.style.opacity = '0';
+                });
+            }
+        }); // End of DOMContentLoaded
+    </script>
+</body>
+</html>
